@@ -1,5 +1,5 @@
 #!/bin/bash
-cd `dirname $-0`
+cd `dirname $0`
 source ./env.sh
 TEXT='ログイン履歴\n'
 RESULT=`cat -n /var/log/auth.log | grep systemd-logind | tail -n 50`

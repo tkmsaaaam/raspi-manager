@@ -1,5 +1,5 @@
 #!/bin/bash
-cd `dirname $-0`
+cd `dirname $0`
 source ./env.sh
 TEXT='スキャン結果\n'
 RESULT=`clamscan / -r -i`
