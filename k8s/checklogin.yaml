@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: check-login
+spec:
+  schedule: "55 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: ubuntu
+            image: ubuntu:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              apt-get update -q
+              apt-get install -qy curl tzdata
+              DATE=`date '+%b %e'`
+              RESULT=`cat -n /logs/auth.log | grep -a -e systemd-logind -e sshd | grep -a "$DATE"`
+              COUNT=`echo "$RESULT" | wc -l`
+              TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
+              curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" "https://slack.com/api/chat.postMessage?channel=$SLACK_CHANNEL"
+            volumeMounts:
+            - mountPath: /logs/auth.log
+              name: authlog
+              readOnly: true
+            env:
+            - name: TZ
+              value: Asia/Tokyo
+            - name: LANG
+              value: C.UTF-8
+            - name: LANGUAGE
+              value: en_US
+            envFrom:
+            - configMapRef:
+                name: common-enviroments
+          volumes:
+          - name: authlog
+            hostPath:
+              path: /var/log/auth.log
+              type: File
+          restartPolicy: Never
