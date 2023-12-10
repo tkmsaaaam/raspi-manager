@@ -19,7 +19,7 @@ spec:
               apt-get install -qy curl tzdata
               DATE=`date '+%b %e'`
               RESULT=`cat -n /logs/auth.log | grep -a -e systemd-logind -e sshd | grep -a "$DATE"`
-              COUNT=`echo "$RESULT" | wc -l`
+              COUNT=`echo  -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
               curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" "https://slack.com/api/chat.postMessage?channel=$SLACK_CHANNEL"
             volumeMounts:
