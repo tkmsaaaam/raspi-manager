@@ -9,19 +9,19 @@ spec:
       template:
         spec:
           containers:
-          - name: ubuntu
-            image: ubuntu:latest
+          - name: alpine
+            image: alpine:latest
             command:
             - /bin/bash
             - -c
             - |
-              apt-get update -q
-              apt-get install -qy curl tzdata
+              apk update
+              apk add curl tzdata
               DATE=`date '+%b %e'`
               RESULT=`cat -n /logs/auth.log | grep -a -e systemd-logind -e sshd | grep -a "$DATE"`
-              COUNT=`echo  -n "$RESULT" | wc -l`
+              COUNT=`echo -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
-              curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" "https://slack.com/api/chat.postMessage?channel=$SLACK_CHANNEL"
+              curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
             volumeMounts:
             - mountPath: /logs/auth.log
               name: authlog
