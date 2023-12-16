@@ -12,7 +12,7 @@ spec:
           - name: alpine
             image: alpine:latest
             command:
-            - /bin/bash
+            - /bin/sh
             - -c
             - |
               apk update
