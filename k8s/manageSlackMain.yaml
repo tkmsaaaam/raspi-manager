@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: manage-slack-main
+spec:
+  schedule: "43 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: alpine
+            image: golang:1.21-alpine
+            command:
+            - /bin/sh
+            - -c
+            - |
+              apk update
+              apk add git
+              git clone https://github.com/tkmsaaaam/manage-slack.git
+              cd manage-slack
+              go run main.go
+            env:
+            - name: DAYS
+              value: "3"
+            envFrom:
+            - configMapRef:
+                name: common-enviroments
+          restartPolicy: Never

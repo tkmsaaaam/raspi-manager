@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: weather-notification
+spec:
+  schedule: "07 03 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: alpine
+            image: golang:1.21-alpine
+            command:
+            - /bin/sh
+            - -c
+            - |
+              apk update
+              apk add git
+              git clone https://github.com/tkmsaaaam/weather-notification.git
+              cd weather-notification
+              go run main.go
+            envFrom:
+            - configMapRef:
+                name: common-enviroments
+          restartPolicy: Never
