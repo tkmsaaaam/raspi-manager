@@ -16,7 +16,14 @@ spec:
             - -c
             - |
               apk update
-              apk add git
+              apk add git npm
+              git clone https://github.com/tkmsaaaam/raspi-manager.git
+              cd raspi-manager/jwt
+              echo PRIVATE_KEY > private-key.pem
+              npm install
+              npm run start > token.log
+              GH_TOKEN=`cat token.log | tail -n 1`
+              cd /
               git clone https://github.com/tkmsaaaam/count-commits-js.git
               cd count-commits-js
               go run main.go
