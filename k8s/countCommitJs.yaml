@@ -22,7 +22,7 @@ spec:
               echo "$PRIVATE_KEY" > private-key.pem
               npm install
               npm run start > token.log
-              GH_TOKEN=`cat token.log | tail -n 1`
+              GH_TOKEN=`cat token.log | grep "ghu_" | tail -n 1`
               cd /
               git clone https://github.com/tkmsaaaam/count-commits-js.git
               cd count-commits-js

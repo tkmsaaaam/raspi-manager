@@ -33,7 +33,7 @@ type JwtPayload = {
 				Authorization: `Bearer ${token}`,
 				Accept: 'application/vnd.github+json',
 			},
-		}
+		},
 	).then(res => res.json());
 	console.log(accessTokenRes.token);
 })();
