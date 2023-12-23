@@ -19,15 +19,24 @@ spec:
               apk add git npm
               git clone https://github.com/tkmsaaaam/raspi-manager.git
               cd raspi-manager/jwt
-              echo "$PRIVATE_KEY" > private-key.pem
+              cat /etc/commonSecrets/PRIVATE_KEY > private-key.pem
               npm install
               npm run start > token.log
               GH_TOKEN=`cat token.log | grep "ghu_" | tail -n 1`
               cd /
               git clone https://github.com/tkmsaaaam/count-commits-js.git
               cd count-commits-js
+              export GH_TOKEN=`cat /etc/commonSecrets/GH_TOKEN`
+              export GH_USER_NAME=`cat /etc/commonSecrets/GH_USER_NAME`
+              export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
+              export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
               go run main.go
-            envFrom:
-            - configMapRef:
-                name: common-enviroments
+            volumeMounts:
+            - name: common-secrets
+              mountPath: "/etc/commonSecrets"
+              readOnly: true
+          volumes:
+          - name: common-secrets
+            secret:
+              secretName: common-secrets
           restartPolicy: Never

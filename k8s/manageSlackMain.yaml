@@ -19,11 +19,19 @@ spec:
               apk add git
               git clone https://github.com/tkmsaaaam/manage-slack.git
               cd manage-slack
+              export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
+              export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
+              export SLACK_USER_TOKEN=`cat /etc/commonSecrets/SLACK_USER_TOKEN`
               go run main.go
             env:
             - name: DAYS
               value: "3"
-            envFrom:
-            - configMapRef:
-                name: common-enviroments
+            volumeMounts:
+            - name: common-secrets
+              mountPath: "/etc/commonSecrets"
+              readOnly: true
+          volumes:
+          - name: common-secrets
+            secret:
+              secretName: common-secrets
           restartPolicy: Never
