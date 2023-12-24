@@ -17,14 +17,16 @@ spec:
             - |
               apk update
               apk add git npm
-              git clone https://github.com/tkmsaaaam/raspi-manager.git
+              git clone https://github.com/tkmsaaaam/raspi-manager.git --depth=1
               cd raspi-manager/jwt
+              export INSTALL_ID=`cat /etc/commonSecrets/INSTALL_ID`
+              export APP_ID=`cat /etc/commonSecrets/APP_ID`
               cat /etc/commonSecrets/PRIVATE_KEY > private-key.pem
               npm install
               npm run start > token.log
-              GH_TOKEN=`cat token.log | grep "ghu_" | tail -n 1`
+              export GH_TOKEN=`cat token.log | grep "ghs_" | tail -n 1`
               cd /
-              git clone https://github.com/tkmsaaaam/count-commits-js.git
+              git clone https://github.com/tkmsaaaam/count-commits-js.git --depth=1
               cd count-commits-js
               export GH_USER_NAME=`cat /etc/commonSecrets/GH_USER_NAME`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
