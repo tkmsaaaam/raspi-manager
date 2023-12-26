@@ -16,9 +16,11 @@ spec:
             - -c
             - |
               apk update
-              apk add git
-              git clone https://github.com/tkmsaaaam/manage-slack.git
-              cd manage-slack
+              apk add curl
+              curl https://github.com/tkmsaaaam/manage-slack/archive/refs/heads/main.tar.gz -OL
+              tar -zxvf main.tar.gz
+              rm -rf main.tar.gz
+              cd manage-slack-main
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
               export SLACK_USER_TOKEN=`cat /etc/commonSecrets/SLACK_USER_TOKEN`

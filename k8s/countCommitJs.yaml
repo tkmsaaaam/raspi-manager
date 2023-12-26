@@ -16,9 +16,11 @@ spec:
             - -c
             - |
               apk update
-              apk add git npm
-              git clone https://github.com/tkmsaaaam/raspi-manager.git --depth=1
-              cd raspi-manager/jwt
+              apk add curl npm
+              curl https://github.com/tkmsaaaam/raspi-manager/archive/refs/heads/main.tar.gz -OL
+              tar -zxvf main.tar.gz
+              rm -rf main.tar.gz
+              cd raspi-manager-main/jwt
               export INSTALL_ID=`cat /etc/commonSecrets/INSTALL_ID`
               export APP_ID=`cat /etc/commonSecrets/APP_ID`
               cat /etc/commonSecrets/PRIVATE_KEY > private-key.pem
@@ -26,8 +28,10 @@ spec:
               npm run start > token.log
               export GH_TOKEN=`cat token.log | grep "ghs_" | tail -n 1`
               cd /
-              git clone https://github.com/tkmsaaaam/count-commits-js.git --depth=1
-              cd count-commits-js
+              curl https://github.com/tkmsaaaam/count-commits-js/archive/refs/heads/main.tar.gz -OL
+              tar -zxvf main.tar.gz
+              rm -rf main.tar.gz
+              cd count-commits-js-main
               export GH_USER_NAME=`cat /etc/commonSecrets/GH_USER_NAME`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`

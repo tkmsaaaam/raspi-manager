@@ -16,9 +16,11 @@ spec:
             - -c
             - |
               apk update
-              apk add git
-              git clone https://github.com/tkmsaaaam/weather-notification.git
-              cd weather-notification
+              apk add curl
+              curl https://github.com/tkmsaaaam/weather-notification/archive/refs/heads/main.tar.gz -OL
+              tar -zxvf main.tar.gz
+              rm -rf main.tar.gz
+              cd weather-notification-main
               export CITY_ID=`cat /etc/commonSecrets/CITY_ID`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
