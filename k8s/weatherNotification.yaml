@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: weather-notification
 spec:
-  schedule: "07 03 * * *"
+  schedule: "07 18 * * *"
   jobTemplate:
     spec:
       template:
