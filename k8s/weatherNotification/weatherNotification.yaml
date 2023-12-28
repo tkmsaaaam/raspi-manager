@@ -1,30 +1,24 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: manage-slack-daily
+  name: weather-notification
 spec:
-  schedule: "21 21 * * *"
+  schedule: "07 18 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: alpine
-            image: golang:1.21-alpine
+          - name: weather-notification
+            image: localhost:5000/weather-notification
             command:
             - /bin/sh
             - -c
             - |
-              apk update
-              apk add curl
-              curl https://github.com/tkmsaaaam/manage-slack/archive/refs/heads/main.tar.gz -OL
-              tar -zxvf main.tar.gz
-              rm -rf main.tar.gz
-              cd manage-slack-main
+              export CITY_ID=`cat /etc/commonSecrets/CITY_ID`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
-              export SLACK_USER_TOKEN=`cat /etc/commonSecrets/SLACK_USER_TOKEN`
-              go run daily.go
+              /app/weather-notification
             volumeMounts:
             - name: common-secrets
               mountPath: "/etc/commonSecrets"

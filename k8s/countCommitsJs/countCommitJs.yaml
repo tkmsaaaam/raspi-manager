@@ -9,33 +9,23 @@ spec:
       template:
         spec:
           containers:
-          - name: alpine
-            image: golang:1.21-alpine
+          - name: count-commits-js
+            image: localhost:5000/count-commits-js
             command:
             - /bin/sh
             - -c
             - |
-              apk update
-              apk add curl npm
-              curl https://github.com/tkmsaaaam/raspi-manager/archive/refs/heads/main.tar.gz -OL
-              tar -zxvf main.tar.gz
-              rm -rf main.tar.gz
-              cd raspi-manager-main/jwt
               export INSTALL_ID=`cat /etc/commonSecrets/INSTALL_ID`
               export APP_ID=`cat /etc/commonSecrets/APP_ID`
               cat /etc/commonSecrets/PRIVATE_KEY > private-key.pem
+              cd /app/jwt
               npm install
               npm run start > token.log
               export GH_TOKEN=`cat token.log | grep "ghs_" | tail -n 1`
-              cd /
-              curl https://github.com/tkmsaaaam/count-commits-js/archive/refs/heads/main.tar.gz -OL
-              tar -zxvf main.tar.gz
-              rm -rf main.tar.gz
-              cd count-commits-js-main
               export GH_USER_NAME=`cat /etc/commonSecrets/GH_USER_NAME`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
-              go run main.go
+              /app/count-commits-js
             volumeMounts:
             - name: common-secrets
               mountPath: "/etc/commonSecrets"
