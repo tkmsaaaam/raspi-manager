@@ -32,4 +32,4 @@ spec:
       - name: registry
         hostPath:
           type: Directory
-          path: /var/local/registry
+          path: /var/lib/registry

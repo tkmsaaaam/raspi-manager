@@ -17,11 +17,8 @@ spec:
             - |
               export INSTALL_ID=`cat /etc/commonSecrets/INSTALL_ID`
               export APP_ID=`cat /etc/commonSecrets/APP_ID`
-              cat /etc/commonSecrets/PRIVATE_KEY > private-key.pem
-              cd /app/jwt
-              npm install
-              npm run start > token.log
-              export GH_TOKEN=`cat token.log | grep "ghs_" | tail -n 1`
+              cat /etc/commonSecrets/PRIVATE_KEY > /app/jwt/private-key.pem
+              export GH_TOKEN=`/app/jwt`
               export GH_USER_NAME=`cat /etc/commonSecrets/GH_USER_NAME`
               export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
               export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`

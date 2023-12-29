@@ -1,4 +1,1 @@
-lib
-node_modules
-package-lock.json
-**.pem
+jwt
