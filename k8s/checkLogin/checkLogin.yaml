@@ -10,15 +10,12 @@ spec:
         spec:
           containers:
           - name: alpine
-            image: alpine:latest
+            image: localhost:5000/check-login
             command:
             - /bin/sh
             - -c
             - |
-              apk update
-              apk add curl tzdata
-              DATE=`date '+%b %e'`
-              RESULT=`cat -n /logs/auth.log | grep -a -e systemd-logind -e sshd | grep -a "$DATE"`
+              RESULT=`/app/AuthlogParser`
               COUNT=`echo -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
               export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
@@ -47,3 +44,4 @@ spec:
             secret:
               secretName: common-secrets
           restartPolicy: Never
+      backoffLimit: 2

@@ -28,3 +28,4 @@ spec:
             secret:
               secretName: common-secrets
           restartPolicy: Never
+      backoffLimit: 2
