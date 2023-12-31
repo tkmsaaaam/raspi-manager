@@ -4,8 +4,11 @@ metadata:
   name: check-login
 spec:
   schedule: "55 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
+      backoffLimit: 2
       template:
         spec:
           containers:
@@ -15,7 +18,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              RESULT=`/app/AuthlogParser`
+              RESULT=`dotnet run`
               COUNT=`echo -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
               export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
@@ -44,4 +47,3 @@ spec:
             secret:
               secretName: common-secrets
           restartPolicy: Never
-      backoffLimit: 2
