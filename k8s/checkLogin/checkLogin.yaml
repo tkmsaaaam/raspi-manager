@@ -12,7 +12,7 @@ spec:
       template:
         spec:
           containers:
-          - name: alpine
+          - name: check-login
             image: localhost:5000/check-login
             command:
             - /bin/sh
