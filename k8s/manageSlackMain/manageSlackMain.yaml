@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
           - name: manage-slack-main
-            image: localhost:5000/manage-slack-main
+            image: localhost:5000/manage-slack-main:latest
             command:
             - /bin/sh
             - -c

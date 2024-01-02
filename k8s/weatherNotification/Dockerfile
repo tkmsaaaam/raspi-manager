@@ -1,4 +1,4 @@
-# localhost:5000/weather-notification
+# localhost:5000/weather-notification:latest
 FROM alpine:latest as clone
 RUN apk update && apk add git
 WORKDIR /app

@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
           - name: weather-notification
-            image: localhost:5000/weather-notification
+            image: localhost:5000/weather-notification:latest
             command:
             - /bin/sh
             - -c

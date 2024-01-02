@@ -7,8 +7,8 @@ let main args =
         date.Equals(string today.Day)
     let filterDaemon (daemon: string) =
         daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
-    let filterLine (line: string) =
-        line.Split()[0] |> filterMonth && line.Split()[1] |> filterDate && line.Split()[4] |> filterDaemon
+    let filterLine (line: string) = // TODO: fix filterDate, filterDaemon
+        line.Split()[0] |> filterMonth && line.Split()[2] |> filterDate && line.Split()[5] |> filterDaemon
     let file = @"/logs/auth.log"
     let lines = System.IO.File.ReadAllLines(file)
     let filterLines (lines: string array) =

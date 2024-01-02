@@ -1,4 +1,4 @@
-# localhost:5000/check-login
+# localhost:5000/check-login:latest
 FROM alpine:latest as clone
 RUN apk update && apk add git
 WORKDIR /app
