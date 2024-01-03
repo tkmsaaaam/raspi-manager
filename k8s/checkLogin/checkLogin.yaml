@@ -25,7 +25,7 @@ spec:
               export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
               curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
             volumeMounts:
-            - mountPath: /logs/auth.log
+            - mountPath: /logs/authlog
               name: authlog
               readOnly: true
             - name: common-secrets
@@ -41,7 +41,7 @@ spec:
           volumes:
           - name: authlog
             hostPath:
-              path: /var/log/auth.log
+              path: /var/log/authlog
               type: File
           - name: common-secrets
             secret:
