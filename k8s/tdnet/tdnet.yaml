@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tdnet
+spec:
+  schedule: "37 11 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          containers:
+          - name: tdnet
+            image: localhost:5000/tdnet:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              node lib/index.js
+              export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
+              export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
+              curl -F file=@output.txt -F "initial_comment=tdnet" -H "Authorization: Bearer $SLACK_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
+            volumeMounts:
+            - name: common-secrets
+              mountPath: "/etc/commonSecrets"
+              readOnly: true
+          volumes:
+          - name: common-secrets
+            secret:
+              secretName: common-secrets
+          restartPolicy: Never

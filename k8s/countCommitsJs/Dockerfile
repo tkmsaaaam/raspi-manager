@@ -1,6 +1,6 @@
 # localhost:5000/count-commits-js:latest
 FROM alpine:latest as clone
-RUN apk update && apk add git
+RUN apk add --update git
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/raspi-manager.git --depth 1
 RUN git clone https://github.com/tkmsaaaam/count-commits-js.git --depth 1

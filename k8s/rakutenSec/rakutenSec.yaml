@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rakuten-sec
+spec:
+  schedule: "37 20 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          containers:
+          - name: rakuten-sec
+            image: localhost:5000/rakuten-sec:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              export USERNAME=`cat /etc/commonSecrets/RAKUTEN_USERNAME`
+              export PASSWORD=`cat /etc/commonSecrets/RAKUTEN_PASSWORD`
+              node lib/index.js
+              export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
+              export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
+              curl -F file=@output.txt -F "initial_comment=rakuten-sec" -H "Authorization: Bearer $SLACK_TOKEN" "https://slack.com/api/files.upload"
+            volumeMounts:
+            - name: common-secrets
+              mountPath: "/etc/commonSecrets"
+              readOnly: true
+          volumes:
+          - name: common-secrets
+            secret:
+              secretName: common-secrets
+          restartPolicy: Never

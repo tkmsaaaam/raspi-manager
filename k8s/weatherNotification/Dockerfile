@@ -1,6 +1,6 @@
 # localhost:5000/weather-notification:latest
 FROM alpine:latest as clone
-RUN apk update && apk add git
+RUN apk add --update git
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/weather-notification.git --depth 1
 
