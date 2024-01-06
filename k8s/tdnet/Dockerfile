@@ -8,6 +8,6 @@ FROM node:18-alpine as build
 COPY --from=clone /app/browser-operator/tdnet /app/tdnet
 WORKDIR /app/tdnet
 RUN apk add --update curl chromium
-RUN npm install && npm install -g typescript && tsc
 ENV FILE_OUTPUT=true
 ENV EXECUTABLE_PATH=/usr/bin/chromium
+CMD npm install && npm install -g typescript

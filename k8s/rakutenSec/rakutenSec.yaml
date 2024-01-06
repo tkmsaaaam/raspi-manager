@@ -20,10 +20,10 @@ spec:
             - |
               export USERNAME=`cat /etc/commonSecrets/RAKUTEN_USERNAME`
               export PASSWORD=`cat /etc/commonSecrets/RAKUTEN_PASSWORD`
-              node lib/index.js
+              npm run start
               export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
               export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
-              curl -F file=@output.txt -F "initial_comment=rakuten-sec" -H "Authorization: Bearer $SLACK_TOKEN" "https://slack.com/api/files.upload"
+              curl -F file=@output.txt -F "initial_comment=rakuten-sec" -H "Authorization: Bearer $SLACK_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
             volumeMounts:
             - name: common-secrets
               mountPath: "/etc/commonSecrets"
