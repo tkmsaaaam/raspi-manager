@@ -20,6 +20,7 @@ spec:
             - |
               export USERNAME=`cat /etc/commonSecrets/RAKUTEN_USERNAME`
               export PASSWORD=`cat /etc/commonSecrets/RAKUTEN_PASSWORD`
+              npm install
               npm run start
               export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
               export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
