@@ -17,17 +17,21 @@ spec:
             command:
             - /bin/sh
             - -c
-            - |
-              export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
-              export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
-              export SLACK_USER_TOKEN=`cat /etc/commonSecrets/SLACK_USER_TOKEN`
-              /app/daily
-            volumeMounts:
-            - name: common-secrets
-              mountPath: "/etc/commonSecrets"
-              readOnly: true
-          volumes:
-          - name: common-secrets
-            secret:
-              secretName: common-secrets
+            - /app/daily
+            env:
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_BOT_TOKEN
+            - name: SLACK_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_CHANNEL_ID
+            - name: SLACK_USER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_USER_TOKEN
           restartPolicy: Never

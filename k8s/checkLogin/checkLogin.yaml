@@ -21,15 +21,10 @@ spec:
               RESULT=`dotnet run`
               COUNT=`echo -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
-              export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
-              export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
-              curl -H "Authorization: Bearer $SLACK_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
+              curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
             volumeMounts:
             - mountPath: /logs/authlog
               name: authlog
-              readOnly: true
-            - name: common-secrets
-              mountPath: "/etc/commonSecrets"
               readOnly: true
             env:
             - name: TZ
@@ -38,12 +33,19 @@ spec:
               value: C.UTF-8
             - name: LANGUAGE
               value: en_US
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_BOT_TOKEN
+            - name: SLACK_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_CHANNEL
           volumes:
           - name: authlog
             hostPath:
               path: /var/log/authlog
               type: File
-          - name: common-secrets
-            secret:
-              secretName: common-secrets
           restartPolicy: Never

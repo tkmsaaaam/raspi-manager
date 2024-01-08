@@ -20,15 +20,16 @@ spec:
             - |
               npm install
               npm run start
-              export SLACK_TOKEN=`cat /etc/commonSecrets/SLACK_TOKEN`
-              export SLACK_CHANNEL=`cat /etc/commonSecrets/SLACK_CHANNEL`
-              curl -F file=@output.txt -F "initial_comment=tdnet" -H "Authorization: Bearer $SLACK_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
-            volumeMounts:
-            - name: common-secrets
-              mountPath: "/etc/commonSecrets"
-              readOnly: true
-          volumes:
-          - name: common-secrets
-            secret:
-              secretName: common-secrets
+              curl -F file=@output.txt -F "initial_comment=tdnet" -H "Authorization: Bearer $SLACK_BOT_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
+            env:
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_BOT_TOKEN
+            - name: SLACK_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_CHANNEL
           restartPolicy: Never

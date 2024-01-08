@@ -17,17 +17,21 @@ spec:
             command:
             - /bin/sh
             - -c
-            - |
-              export CITY_ID=`cat /etc/commonSecrets/CITY_ID`
-              export SLACK_BOT_TOKEN=`cat /etc/commonSecrets/SLACK_BOT_TOKEN`
-              export SLACK_CHANNEL_ID=`cat /etc/commonSecrets/SLACK_CHANNEL_ID`
-              /app/weather-notification
-            volumeMounts:
-            - name: common-secrets
-              mountPath: "/etc/commonSecrets"
-              readOnly: true
-          volumes:
-          - name: common-secrets
-            secret:
-              secretName: common-secrets
+            - /app/weather-notification
+            env:
+            - name: CITY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: CITY_ID
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_BOT_TOKEN
+            - name: SLACK_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_CHANNEL_ID
           restartPolicy: Never
