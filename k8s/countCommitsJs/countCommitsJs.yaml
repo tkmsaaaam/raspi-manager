@@ -4,7 +4,7 @@ metadata:
   name: count-commits-js
 spec:
   schedule: "20 11 * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:

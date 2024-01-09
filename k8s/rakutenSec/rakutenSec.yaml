@@ -4,7 +4,7 @@ metadata:
   name: rakuten-sec
 spec:
   schedule: "37 20 * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:

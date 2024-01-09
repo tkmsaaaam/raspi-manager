@@ -4,7 +4,7 @@ metadata:
   name: tdnet
 spec:
   schedule: "37 11 * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:

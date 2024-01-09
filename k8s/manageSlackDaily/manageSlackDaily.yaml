@@ -4,7 +4,7 @@ metadata:
   name: manage-slack-daily
 spec:
   schedule: "21 21 * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:

@@ -4,7 +4,7 @@ metadata:
   name: manage-slack-main
 spec:
   schedule: "43 * * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
