@@ -18,7 +18,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              RESULT=`dotnet run`
+              RESULT=`AuthlogParser`
               COUNT=`echo -n "$RESULT" | wc -l`
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
               curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
