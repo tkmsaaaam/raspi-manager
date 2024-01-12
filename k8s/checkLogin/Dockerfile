@@ -11,5 +11,5 @@ RUN dotnet publish -c Release --self-contained true /p:PublishSingleFile=true
 
 FROM alpine:latest
 COPY --from=build /app/AuthlogParser/bin/Release/net8.0/linux-musl-arm/publish /app
-RUN apk add --update libgcc libstdc++ icu-libs
+RUN apk add --update libgcc libstdc++ icu-libs curl
 WORKDIR /app
