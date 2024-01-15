@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  labels:
+    app: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      hostNetwork: true
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      nodeSelector:
+        kubernetes.io/hostname: raspberrypi
+      containers:
+      - name: loki
+        image: docker.io/grafana/loki@sha256:ffb77b674bd159de6c08f126e8fcc9121e035bde7fc05576d46d487282730bdf
+        ports:
+        - containerPort: 3100
+        resources:
