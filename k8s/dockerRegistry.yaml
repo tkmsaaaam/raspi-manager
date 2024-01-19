@@ -29,6 +29,9 @@ spec:
         - name: registry
           mountPath: /var/lib/registry
         resources:
+          limits:
+            cpu: 10m
+            memory: 126Mi
       volumes:
       - name: registry
         hostPath:
