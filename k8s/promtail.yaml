@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: promtail-deployment
+  name: promtail
   labels:
     app: promtail
 spec:
@@ -26,7 +26,7 @@ spec:
           type: Directory
       - name: config
         hostPath:
-          path: /etc/promtail/config.yaml
+          path: /etc/promtail/config.yml
           type: File
       containers:
       - name: promtail
@@ -35,7 +35,7 @@ spec:
         - name: logs
           mountPath: /var/log
         - name: config
-          mountPath: /etc/promtail/config.yaml
+          mountPath: /etc/promtail/config.yml
         resources:
           limits:
             cpu: 100m
