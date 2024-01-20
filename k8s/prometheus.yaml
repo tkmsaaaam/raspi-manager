@@ -14,12 +14,9 @@ spec:
       labels:
         app: prometheus
     spec:
-      hostNetwork: true
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
-      nodeSelector:
-        kubernetes.io/hostname: raspberrypi
       containers:
       - name: prometheus
         image: prom/prometheus
@@ -27,5 +24,19 @@ spec:
         - containerPort: 9090
         resources:
           limits:
-            cpu: 10m
+            cpu: 100m
             memory: 126Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-svc
+  labels:
+    run: prometheus-svc
+spec:
+  ports:
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: prometheus

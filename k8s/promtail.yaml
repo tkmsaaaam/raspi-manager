@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promtail-deployment
+  labels:
+    app: promtail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      nodeSelector:
+        kubernetes.io/hostname: raspberrypi
+      volumes:
+      - name: logs
+        hostPath:
+          path: /var/log
+          type: Directory
+      - name: config
+        hostPath:
+          path: /etc/promtail/config.yaml
+          type: File
+      containers:
+      - name: promtail
+        image: grafana/promtail
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log
+        - name: config
+          mountPath: /etc/promtail/config.yaml
+        resources:
+          limits:
+            cpu: 100m
+            memory: 126Mi

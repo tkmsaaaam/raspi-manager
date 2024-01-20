@@ -14,12 +14,9 @@ spec:
       labels:
         app: docker-registry
     spec:
-      hostNetwork: true
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
-      nodeSelector:
-        kubernetes.io/hostname: raspberrypi
       containers:
       - name: docker-registry
         image: registry:latest
@@ -30,10 +27,24 @@ spec:
           mountPath: /var/lib/registry
         resources:
           limits:
-            cpu: 10m
+            cpu: 100m
             memory: 126Mi
       volumes:
       - name: registry
         hostPath:
           type: Directory
           path: /var/lib/registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-svc
+  labels:
+    run: registry-svc
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+  selector:
+    app: docker-registry

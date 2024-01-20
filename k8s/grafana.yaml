@@ -14,18 +14,37 @@ spec:
       labels:
         app: grafana
     spec:
-      hostNetwork: true
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
-      nodeSelector:
-        kubernetes.io/hostname: raspberrypi
+      volumes:
+      - name: grafana
+        hostPath:
+          path: /var/lib/grafana
+          type: Directory
       containers:
       - name: grafana
         image: docker.io/grafana/grafana@sha256:e4915c9dc6ea7c5ecade587d21a3caf30504e6f7115bb62a820e58d4fcb13243
         ports:
         - containerPort: 3000
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana
         resources:
           limits:
-            cpu: 10m
+            cpu: 100m
             memory: 126Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-svc
+  labels:
+    run: grafana-svc
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: grafana
