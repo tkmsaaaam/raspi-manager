@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus
+  name: alertmanager
   labels:
-    app: prometheus
+    app: alertmanager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      app: alertmanager
   template:
     metadata:
       labels:
-        app: prometheus
+        app: alertmanager
     spec:
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
       volumes:
-      - name: prometheus
+      - name: alertmanager
         hostPath:
-          path: /etc/prometheus
+          path: /etc/alertmanager
           type: Directory
       containers:
-      - name: prometheus
-        image: prom/prometheus
+      - name: alertmanager
+        image: prom/alertmanager
         ports:
-        - containerPort: 9090
+        - containerPort: 9093
         volumeMounts:
-        - mountPath: /etc/prometheus
-          name: prometheus
+        - mountPath: /etc/alertmanager
+          name: alertmanager
         resources:
           limits:
             cpu: 100m
@@ -38,25 +38,25 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus-svc
+  name: alertmanager-svc
   labels:
-    run: prometheus-svc
+    run: alertmanager-svc
 spec:
   ports:
-  - port: 9090
+  - port: 9093
     protocol: TCP
   selector:
-    app: prometheus
+    app: alertmanager
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus-nodeport
+  name: alertmanager-nodeport
 spec:
   selector:
-    app: prometheus
+    app: alertmanager
   type: NodePort
   ports:
-  - port: 9090
-    nodePort: 30001
+  - port: 9093
+    nodePort: 30002
     protocol: TCP
