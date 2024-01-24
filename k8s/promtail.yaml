@@ -38,5 +38,5 @@ spec:
           mountPath: /etc/promtail/config.yml
         resources:
           limits:
-            cpu: 100m
-            memory: 126Mi
+            cpu: 200m
+            memory: 256Mi

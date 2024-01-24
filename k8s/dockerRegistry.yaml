@@ -31,7 +31,7 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 126Mi
+            memory: 256Mi
       volumes:
       - name: registry
         hostPath:
