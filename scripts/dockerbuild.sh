@@ -1,5 +1,6 @@
 #!/bin/bash
 cd $(dirname $0)
+cd ..
 basedir=`pwd`
 find k8s | grep Dockerfile | while read filename
 do

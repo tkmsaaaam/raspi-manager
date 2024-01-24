@@ -24,7 +24,6 @@ spec:
             volumeMounts:
             - mountPath: /app/tdnet/favorite.txt
               name: favoritelist
-              readOnly: true
             env:
             - name: SLACK_BOT_TOKEN
               valueFrom:
