@@ -19,7 +19,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: loki
-        image: docker.io/grafana/loki@sha256:ffb77b674bd159de6c08f126e8fcc9121e035bde7fc05576d46d487282730bdf
+        image: docker.io/grafana/loki:latest
         ports:
         - containerPort: 3100
         resources:
