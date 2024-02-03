@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: weather-notification
+  namespace: tasks
 spec:
   schedule: "07 18 * * *"
   successfulJobsHistoryLimit: 0

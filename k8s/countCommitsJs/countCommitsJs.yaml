@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: count-commits-js
+  namespace: tasks
 spec:
   schedule: "20 11 * * *"
   successfulJobsHistoryLimit: 0

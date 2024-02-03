@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: tdnet
+  namespace: tasks
 spec:
   schedule: "37 11 * * *"
   successfulJobsHistoryLimit: 0

@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: manage-slack-daily
+  namespace: tasks
 spec:
   schedule: "21 21 * * *"
   successfulJobsHistoryLimit: 0

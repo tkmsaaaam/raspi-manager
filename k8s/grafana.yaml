@@ -24,7 +24,7 @@ spec:
           type: Directory
       containers:
       - name: grafana
-        image: docker.io/grafana/grafana:latest
+        image: docker.io/grafana/grafana@sha256:43b9c8b68a2cefcfe48770ced246a9b8f03cc8f790377f403ae979c5fefa9ca4
         ports:
         - containerPort: 3000
         volumeMounts:
