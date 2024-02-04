@@ -4,6 +4,7 @@ metadata:
   name: promtail
   labels:
     app: promtail
+  namespace: otel
 spec:
   replicas: 1
   selector:

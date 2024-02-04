@@ -4,6 +4,7 @@ metadata:
   name: grafana
   labels:
     app: grafana
+  namespace: otel
 spec:
   replicas: 1
   selector:
@@ -41,6 +42,7 @@ metadata:
   name: grafana-svc
   labels:
     run: grafana-svc
+  namespace: otel
 spec:
   ports:
   - port: 3000
@@ -52,6 +54,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grafana-nodeport
+  namespace: otel
 spec:
   selector:
     app: grafana

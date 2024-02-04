@@ -4,3 +4,10 @@ metadata:
   name: tasks
   labels:
     name: tasks
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: otel
+  labels:
+    name: otel
