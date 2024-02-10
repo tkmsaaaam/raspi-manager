@@ -19,10 +19,9 @@ spec:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
       volumes:
-      - name: grafana
-        hostPath:
-          path: /var/lib/grafana
-          type: Directory
+      - name: grafana-pv
+        persistentVolumeClaim:
+          claimName: grafana-pvc
       containers:
       - name: grafana
         image: docker.io/grafana/grafana@sha256:43b9c8b68a2cefcfe48770ced246a9b8f03cc8f790377f403ae979c5fefa9ca4
@@ -30,11 +29,46 @@ spec:
         - containerPort: 3000
         volumeMounts:
         - mountPath: /var/lib/grafana
-          name: grafana
+          name: grafana-pv
         resources:
           limits:
             cpu: 100m
             memory: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: otel
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+  namespace: otel
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-pv
+  namespace: otel
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-storage
+  hostPath:
+    path: /var/lib/grafana
 ---
 apiVersion: v1
 kind: Service
