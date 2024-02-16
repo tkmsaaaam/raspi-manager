@@ -1,6 +1,6 @@
 # localhost:5000/check-login:latest
 FROM alpine:latest as clone
-RUN apk add --update git
+RUN apk add --update --no-cache git
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/raspi-manager.git --depth 1
 
@@ -11,5 +11,5 @@ RUN dotnet publish -c Release --self-contained true /p:PublishSingleFile=true
 
 FROM alpine:latest
 COPY --from=build /app/AuthlogParser/bin/Release/net8.0/linux-musl-arm/publish /app
-RUN apk add --update libgcc libstdc++ icu-libs curl tzdata
+RUN apk add --update --no-cache libgcc libstdc++ icu-libs curl tzdata
 WORKDIR /app
