@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: unitedcinemas
+  namespace: tasks
+spec:
+  schedule: "37 3 * * 1"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          containers:
+          - name: unitedcinemas
+            image: localhost:5000/unitedcinemas:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              npm install
+              export RESULT=`npm run start`
+              curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$RESULT" "https://slack.com/api/chat.postMessage?channel=$SLACK_CHANNEL"
+            env:
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_BOT_TOKEN
+            - name: SLACK_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: SLACK_CHANNEL
+            - name: THEATER
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: THEATER
+          restartPolicy: Never
