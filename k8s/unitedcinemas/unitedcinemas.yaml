@@ -20,8 +20,8 @@ spec:
             - -c
             - |
               npm install
-              export RESULT=`npm run start`
-              curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$RESULT" "https://slack.com/api/chat.postMessage?channel=$SLACK_CHANNEL"
+              npm run start > output.txt
+              curl -F file=@output.txt -F "initial_comment=unitedcinemas" -H "Authorization: Bearer $SLACK_BOT_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
             env:
             - name: SLACK_BOT_TOKEN
               valueFrom:
