@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cadvisor-svc
+  labels:
+    run: cadvisor-svc
+  namespace: cadvisor
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: cadvisor
