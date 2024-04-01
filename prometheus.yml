@@ -35,8 +35,11 @@ scrape_configs:
   static_configs:
   - targets:
     - localhost:9090
-    - cadvisor-svc.cadvisor.svc.cluster.local:8080
 - job_name: node
   static_configs:
   - targets:
     - node-exporter-svc:9100
+- job_name: cadvisor
+  static_configs:
+  - targets:
+    - cadvisor-svc.cadvisor.svc.cluster.local:8080
