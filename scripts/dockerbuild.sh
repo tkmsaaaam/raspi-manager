@@ -1,4 +1,6 @@
 #!/bin/bash
+HOST_NAME=$1
+OPTS=$2
 cd $(dirname $0)
 cd ..
 basedir=`pwd`
@@ -8,7 +10,7 @@ do
   cd $path
   pwd
   imageName=`cat Dockerfile | head -n 1 | sed "s/# //g"`
-  echo $imageName
-  docker build . -t $imageName $1
+  echo $HOST_NAME/$imageName
+  docker build . -t $HOST_NAME/$imageName $OPTS
   cd $basedir
 done

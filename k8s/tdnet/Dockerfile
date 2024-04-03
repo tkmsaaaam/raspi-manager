@@ -1,4 +1,4 @@
-# localhost:5000/tdnet:latest
+# tdnet:latest
 FROM alpine:latest as clone
 RUN apk add --update git
 WORKDIR /app

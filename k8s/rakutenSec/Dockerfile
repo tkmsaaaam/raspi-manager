@@ -1,4 +1,4 @@
-# localhost:5000/rakuten-sec:latest
+# rakuten-sec:latest
 FROM alpine:latest as clone
 RUN apk add --update --no-cache git
 WORKDIR /app

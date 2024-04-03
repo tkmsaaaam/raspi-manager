@@ -1,4 +1,4 @@
-# localhost:5000/count-commits-js:latest
+# count-commits-js:latest
 FROM alpine:latest as clone
 RUN apk add --update --no-cache git
 WORKDIR /app

@@ -1,4 +1,4 @@
-# localhost:5000/unitedcinemas:latest
+# unitedcinemas:latest
 FROM node:21-alpine
 RUN apk add --update --no-cache git curl
 WORKDIR /app

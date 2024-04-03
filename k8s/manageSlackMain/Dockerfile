@@ -1,4 +1,4 @@
-# localhost:5000/manage-slack-main:latest
+# manage-slack-main:latest
 FROM alpine:latest as clone
 RUN apk add --update --no-cache git
 WORKDIR /app
