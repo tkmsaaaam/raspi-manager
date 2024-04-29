@@ -24,7 +24,7 @@ spec:
               TEXT="ログイン履歴"$'\n'"行数は$COUNT"$'\n'"$RESULT"
               curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
             volumeMounts:
-            - mountPath: /logs/authlog
+            - mountPath: /logs/auth.log
               name: authlog
               readOnly: true
             env:
@@ -44,9 +44,14 @@ spec:
                 secretKeyRef:
                   name: common-secrets
                   key: SLACK_CHANNEL
+            - name: HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: HOSTNAME
           volumes:
           - name: authlog
             hostPath:
-              path: /var/log/authlog
+              path: /var/log/auth.log
               type: File
           restartPolicy: Never

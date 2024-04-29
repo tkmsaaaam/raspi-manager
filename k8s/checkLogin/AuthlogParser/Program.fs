@@ -4,17 +4,19 @@ let main args =
       System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
     let today =
       System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone);
+    let timeLength =
+      today.ToString("MMM d HH:mm:ss", System.Globalization.CultureInfo.CreateSpecificCulture("en-US")).Length
+    let hostnameLength =  System.Environment.GetEnvironmentVariable("HOSTNAME").Length
     let filterDate (date: string) =
-      date.Equals(today.ToString "yyyy/MM/dd" )
+      date.StartsWith(today.ToString("MMM d", System.Globalization.CultureInfo.CreateSpecificCulture("en-US")))
     let filterDaemon (daemon: string) =
       daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
     let filterLine (line: string) =
-      line.Split("|")[0] |> filterDate && line.Split("|")[5] |> filterDaemon
-    let file = @"/logs/authlog"
+      line |> filterDate && line[timeLength+1+hostnameLength+1..] |> filterDaemon
+    let file = @"/logs/auth.log"
     let lines = System.IO.File.ReadAllLines(file)
     let filterLines (lines: string array) =
       lines |> Array.filter (fun line -> filterLine line)
-    let createMessage (line: string) = line[11..]
     for line in filterLines lines do
-      createMessage line |> printfn "%s"
+      line |> printfn "%s"
     0
