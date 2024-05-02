@@ -1,4 +1,30 @@
-﻿[<EntryPoint>]
+﻿type Log =
+    struct
+        val dateTime: string
+        val host: string
+        val daemon: string
+        val message: string
+
+        new(dateTime: string, host: string, daemon: string, message: string) =
+            { dateTime = dateTime
+              host = host
+              daemon = daemon
+              message = message }
+    end
+
+type Result =
+    struct
+        val date: string
+        val host: string
+        val logs: Log list
+
+        new(date: string, host: string, logs: Log list) =
+            { date = date
+              host = host
+              logs = logs }
+    end
+
+[<EntryPoint>]
 let main args =
     let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
     let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
@@ -14,7 +40,7 @@ let main args =
 
     let filterLine (line: string) =
         line |> filterDate
-        && line[timeLength + 1 + hostnameLength + 1 ..] |> filterDaemon
+        && line[timeLength + 1 + hostnameLength + 2 ..] |> filterDaemon
 
     let file = @"/logs/auth.log"
     let lines = System.IO.File.ReadAllLines(file)
@@ -22,11 +48,24 @@ let main args =
     let filterLines (lines: string array) =
         lines |> Array.filter (fun line -> filterLine line)
 
-    printfn "searching..."
-    todayMmmD |> printfn "date: %s"
-    hostname |> printfn "host: %s"
+    let mutable list = []
+
 
     for line in filterLines lines do
-        line |> printfn "%s"
+        let i = line.IndexOf(": ")
+
+        list <-
+            List.append
+                list
+                [ Log(
+                      line[0..timeLength],
+                      line[timeLength + 1 .. timeLength + 1 + hostnameLength],
+                      line[timeLength + 1 + hostnameLength + 2 .. i - 1],
+                      line[i + 2 ..]
+                  ) ]
+
+
+    System.Text.Json.JsonSerializer.Serialize<Result>(Result(todayMmmD, hostname, list))
+    |> printf "%s"
 
     0
