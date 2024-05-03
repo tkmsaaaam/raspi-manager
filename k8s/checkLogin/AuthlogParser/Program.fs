@@ -29,18 +29,21 @@ let main args =
     let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
     let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
     let today = System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone)
-    let todayMmmD = today.ToString("MMM d", format)
-    let timeLength = today.ToString("MMM d HH:mm:ss", format).Length
+    let todayMmm = today.ToString("MMM", format)
+    let timeEnd = 15
+    let hostStart = timeEnd + 1
     let hostname = System.Environment.GetEnvironmentVariable("HOSTNAME")
     let hostnameLength = hostname.Length
-    let filterDate (date: string) = date.StartsWith(todayMmmD)
+    let daemonStart = hostStart + hostnameLength + 1
+
+    let filterDate (date: string) =
+        date.StartsWith(todayMmm) && date[3..5].EndsWith(today.Day.ToString())
 
     let filterDaemon (daemon: string) =
         daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
 
     let filterLine (line: string) =
-        line |> filterDate
-        && line[timeLength + 1 + hostnameLength + 2 ..] |> filterDaemon
+        line |> filterDate && line[daemonStart..] |> filterDaemon
 
     let file = @"/logs/auth.log"
     let lines = System.IO.File.ReadAllLines(file)
@@ -58,14 +61,14 @@ let main args =
             List.append
                 list
                 [ Log(
-                      line[0..timeLength],
-                      line[timeLength + 1 .. timeLength + 1 + hostnameLength],
-                      line[timeLength + 1 + hostnameLength + 2 .. i - 1],
+                      line[0..timeEnd],
+                      line[hostStart .. hostStart + hostnameLength],
+                      line[daemonStart .. i - 1],
                       line[i + 2 ..]
                   ) ]
 
 
-    System.Text.Json.JsonSerializer.Serialize<Result>(Result(todayMmmD, hostname, list))
+    System.Text.Json.JsonSerializer.Serialize<Result>(Result(todayMmm, hostname, list))
     |> printf "%s"
 
     0
