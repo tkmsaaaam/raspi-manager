@@ -29,7 +29,6 @@ let main args =
     let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
     let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
     let today = System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone)
-    let todayMmm = today.ToString("MMM", format)
     let timeEnd = 15
     let hostStart = timeEnd + 1
     let hostname = System.Environment.GetEnvironmentVariable("HOSTNAME")
@@ -37,7 +36,8 @@ let main args =
     let daemonStart = hostStart + hostnameLength + 1
 
     let filterDate (date: string) =
-        date.StartsWith(todayMmm) && date[3..5].EndsWith(today.Day.ToString())
+        date.StartsWith(today.ToString("MMM", format))
+        && date[3..5].EndsWith(today.Day.ToString())
 
     let filterDaemon (daemon: string) =
         daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
@@ -68,7 +68,7 @@ let main args =
                   ) ]
 
 
-    System.Text.Json.JsonSerializer.Serialize<Result>(Result(todayMmm, hostname, list))
+    System.Text.Json.JsonSerializer.Serialize<Result>(Result(today.ToString("MMM dd", format), hostname, list))
     |> printf "%s"
 
     0
