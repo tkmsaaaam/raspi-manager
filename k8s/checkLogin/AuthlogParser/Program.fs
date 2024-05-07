@@ -24,32 +24,32 @@ type Result =
               logs = logs }
     end
 
+let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
+let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
+let today = System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone)
+let filterDate (date: string) =
+    date.StartsWith(today.ToString("MMM", format))
+    && date[3..5].EndsWith(today.Day.ToString())
+
+let filterDaemon (daemon: string) =
+    daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
+
+let filterLine (line: string, daemonStart: int) =
+    line |> filterDate && line[daemonStart..] |> filterDaemon
+
 [<EntryPoint>]
 let main args =
-    let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
-    let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
-    let today = System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone)
     let timeEnd = 15
     let hostStart = timeEnd + 1
     let hostname = System.Environment.GetEnvironmentVariable("HOSTNAME")
     let hostnameLength = hostname.Length
     let daemonStart = hostStart + hostnameLength + 1
 
-    let filterDate (date: string) =
-        date.StartsWith(today.ToString("MMM", format))
-        && date[3..5].EndsWith(today.Day.ToString())
-
-    let filterDaemon (daemon: string) =
-        daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
-
-    let filterLine (line: string) =
-        line |> filterDate && line[daemonStart..] |> filterDaemon
-
     let file = @"/logs/auth.log"
     let lines = System.IO.File.ReadAllLines(file)
 
     let filterLines (lines: string array) =
-        lines |> Array.filter (fun line -> filterLine line)
+        lines |> Array.filter (fun line -> filterLine (line, daemonStart))
 
     let mutable list = []
 
