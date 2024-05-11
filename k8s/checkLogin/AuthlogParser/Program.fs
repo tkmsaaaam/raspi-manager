@@ -27,15 +27,15 @@ type Result =
 let jstTimeZone = System.TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")
 let format = System.Globalization.CultureInfo.CreateSpecificCulture("en-US")
 let today = System.TimeZoneInfo.ConvertTime(System.DateTime.Today, jstTimeZone)
-let filterDate (date: string) =
-    date.StartsWith(today.ToString("MMM", format))
-    && date[3..5].EndsWith(today.Day.ToString())
+let filterDate (line: string, today: System.DateTime) =
+    line.StartsWith(today.ToString("MMM", format))
+    && line[3..5].EndsWith(today.Day.ToString())
 
 let filterDaemon (daemon: string) =
     daemon.StartsWith("sshd") || daemon.StartsWith("systemd-logind")
 
-let filterLine (line: string, daemonStart: int) =
-    line |> filterDate && line[daemonStart..] |> filterDaemon
+let filterLine (line: string, daemonStart: int, today: System.DateTime) =
+    filterDate (line, today) && line[daemonStart..] |> filterDaemon
 
 [<EntryPoint>]
 let main args =
@@ -49,7 +49,7 @@ let main args =
     let lines = System.IO.File.ReadAllLines(file)
 
     let filterLines (lines: string array) =
-        lines |> Array.filter (fun line -> filterLine (line, daemonStart))
+        lines |> Array.filter (fun line -> filterLine (line, daemonStart, today))
 
     let mutable list = []
 
