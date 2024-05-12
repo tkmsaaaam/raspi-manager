@@ -47,15 +47,8 @@ let ``filterDate is Ok`` () =
     Assert.Equal(true, actual)
 
 [<Fact>]
-let ``filterDate is not Ok`` () =
-    let yesterday = today.AddDays(-1)
-    let line = "Jan  1 00:00:00 hostname sshd[000]: message"
-    let actual = filterDate (line, yesterday)
-    Assert.Equal(false, actual)
-
-[<Fact>]
 let ``filterDate is not correct month`` () =
-    let yesterday = today.AddDays(-1)
+    let yesterday = today.AddMonths(-1)
     let line = "Jan  1 00:00:00 hostname sshd[000]: message"
     let actual = filterDate (line, yesterday)
     Assert.Equal(false, actual)
@@ -63,9 +56,9 @@ let ``filterDate is not correct month`` () =
 [<Fact>]
 let ``filterDate is not correct Day`` () =
     let yesterday =
-        System.TimeZoneInfo.ConvertTime(new System.DateTime(2001, 1, 1), jstTimeZone)
+        System.TimeZoneInfo.ConvertTime(new System.DateTime(2001, 1, 30), jstTimeZone)
 
-    let line = "Jan  2 00:00:00 hostname sshd[000]: message"
+    let line = "Jan 31 00:00:00 hostname sshd[000]: message"
     let actual = filterDate (line, yesterday)
     Assert.Equal(false, actual)
 
