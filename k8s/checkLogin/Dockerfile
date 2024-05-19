@@ -1,15 +1,11 @@
 # check-login:latest
-FROM alpine:latest as clone
-RUN apk add --update --no-cache git
-WORKDIR /app
-RUN git clone https://github.com/tkmsaaaam/raspi-manager.git --depth 1
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine as build
-COPY --from=clone /app/raspi-manager/k8s/checkLogin/AuthlogParser /app/AuthlogParser
-WORKDIR /app/AuthlogParser
-RUN dotnet publish -c Release --self-contained true /p:PublishSingleFile=true
-
+# FROM debian:bookworm-slim
+# COPY AuthlogParser/bin/Release/net8.0/linux-arm64/publish/ /app/
+# RUN apt-get update -y  && apt-get install --no-install-recommends -y curl tzdata jq ca-certificates libc6 libgcc-s1 libgssapi-krb5-2 libicu72 libstdc++6 libssl1.1 && apt-get clean && rm -rf /var/lib/apt/lists/*
+# WORKDIR /app
+# CMD ["/bin/sh", "/app/AuthlogParser"]
 FROM alpine:latest
-COPY --from=build /app/AuthlogParser/bin/Release/net8.0/linux-musl-arm/publish /app
-RUN apk add --update --no-cache libgcc libstdc++ icu-libs curl tzdata
+COPY AuthlogParser/bin/Release/net8.0/linux-musl-arm/publish/ /app/
+RUN apk add --update --no-cache libgcc libssl3 libstdc++ zlib icu-libs tzdata curl jq
 WORKDIR /app

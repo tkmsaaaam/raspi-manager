@@ -1,11 +1,11 @@
 # tdnet:latest
-FROM alpine:latest as clone
-RUN apk add --update git
+FROM debian:bookworm-slim as clone
+RUN apt-get update -y && apt-get install --no-install-recommends -y git ca-certificates
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/browser-operator.git --depth 1
 
-FROM node:21-alpine
+FROM node:21-bookworm-slim
 COPY --from=clone /app/browser-operator/tdnet /app/tdnet
 WORKDIR /app/tdnet
-RUN apk add --update curl
+RUN apt-get update -y  && apt-get install --no-install-recommends -y curl ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
 ENV FILE_OUTPUT=true EXECUTABLE_PATH=/usr/bin/chromium
