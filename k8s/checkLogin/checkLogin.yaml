@@ -20,7 +20,7 @@ spec:
             - -c
             - |
               RESULT=`./AuthlogParser | jq`
-              TEXT="ログイン履歴"$'\n'"$RESULT"
+              TEXT="ログイン履歴: $RESULT"
               curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
             volumeMounts:
             - mountPath: /logs/auth.log
