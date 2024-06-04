@@ -20,8 +20,8 @@ spec:
             - -c
             - |
               RESULT=`./AuthlogParser | jq`
-              TEXT="ログイン履歴: $RESULT"
-              curl -H "Authorization: Bearer $SLACK_BOT_TOKEN" -d "text=$TEXT" -d "channel=$SLACK_CHANNEL" "https://slack.com/api/chat.postMessage"
+              export MESSAGE="ログイン履歴: $RESULT"
+              /app/slackPublisher
             volumeMounts:
             - mountPath: /logs/auth.log
               name: authlog
@@ -33,12 +33,12 @@ spec:
               value: C.UTF-8
             - name: LANGUAGE
               value: en_US
-            - name: SLACK_BOT_TOKEN
+            - name: SLACK_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: common-secrets
                   key: SLACK_BOT_TOKEN
-            - name: SLACK_CHANNEL
+            - name: SLACK_CHANNEL_ID
               valueFrom:
                 secretKeyRef:
                   name: common-secrets

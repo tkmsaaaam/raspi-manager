@@ -21,7 +21,8 @@ spec:
             - |
               npm install
               npm run start
-              curl -F file=@output.txt -F "initial_comment=rakuten-sec" -H "Authorization: Bearer $SLACK_BOT_TOKEN" -F "channels=$SLACK_CHANNEL" "https://slack.com/api/files.upload"
+              export FILE_PATH=/app/rakuten-sec/output.txt
+              /app/slackPublisher
             env:
             - name: USERNAME
               valueFrom:
@@ -33,12 +34,12 @@ spec:
                 secretKeyRef:
                   name: common-secrets
                   key: RAKUTEN_PASSWORD
-            - name: SLACK_BOT_TOKEN
+            - name: SLACK_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: common-secrets
                   key: SLACK_BOT_TOKEN
-            - name: SLACK_CHANNEL
+            - name: SLACK_CHANNEL_ID
               valueFrom:
                 secretKeyRef:
                   name: common-secrets
