@@ -15,4 +15,5 @@ RUN go install && go build
 FROM node:21-bookworm-slim
 COPY --from=clone /app/browser-operator/tdnet /app/tdnet
 COPY --from=build /work/raspi-manager/slackPublisher/slackPublisher /app/slackPublisher
+RUN apt-get update -y  && apt-get install --no-install-recommends -y ca-certificates &&  apt-get clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /app/tdnet

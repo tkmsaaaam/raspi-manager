@@ -16,5 +16,5 @@ FROM node:21-bookworm-slim
 COPY --from=clone /app/browser-operator/rakuten-sec /app/rakuten-sec
 COPY --from=build /work/raspi-manager/slackPublisher/slackPublisher /app/slackPublisher
 WORKDIR /app/rakuten-sec
-RUN apt-get update -y  && apt-get install --no-install-recommends -y chromium && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y  && apt-get install --no-install-recommends -y chromium ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
 ENV FILE_OUTPUT=true EXECUTABLE_PATH=/usr/bin/chromium

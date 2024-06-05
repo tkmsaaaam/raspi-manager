@@ -16,3 +16,5 @@ RUN go install && go build
 FROM node:21-bookworm-slim
 COPY --from=build /app/browser-operator/unitedcinemas /app/unitedcinemas
 COPY --from=build-publisher /work/raspi-manager/slackPublisher/slackPublisher /app/slackPublisher
+RUN apt-get update -y  && apt-get install --no-install-recommends -y ca-certificates &&  apt-get clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /app/unitedcinemas

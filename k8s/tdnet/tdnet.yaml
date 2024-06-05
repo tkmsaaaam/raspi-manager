@@ -39,6 +39,8 @@ spec:
                   key: SLACK_CHANNEL
             - name: FAVORITES_FILE_PATH
               value: /app/tdnet/favorite.txt
+            - name: FILE_OUTPUT
+              value: true
           volumes:
           - name: favoritelist
             hostPath:
