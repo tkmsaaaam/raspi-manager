@@ -40,7 +40,7 @@ spec:
             - name: FAVORITES_FILE_PATH
               value: /app/tdnet/favorite.txt
             - name: FILE_OUTPUT
-              value: true
+              value: "true"
           volumes:
           - name: favoritelist
             hostPath:
