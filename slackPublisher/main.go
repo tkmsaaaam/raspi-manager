@@ -42,7 +42,7 @@ func (client Client) sendFromMessage(channel string) {
 			}
 			log.Println("Successful: post message")
 		} else {
-			f, err := os.CreateTemp("", "message.txt")
+			f, err := os.Create("message.txt")
 			if err != nil {
 				log.Println("can not create temp file", err)
 				return
