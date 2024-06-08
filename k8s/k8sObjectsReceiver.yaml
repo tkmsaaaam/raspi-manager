@@ -1,0 +1,100 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/1d12566c29f8192bfaaabb72c3f2eca8df613a87/receiver/k8sobjectsreceiver/README.md
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-objects-receiver
+  labels:
+    app: k8s-objects-receiver
+data:
+  config.yaml: |
+    receivers:
+      k8sobjects:
+        objects:
+          - name: pods
+            mode: pull
+          - name: events
+            mode: watch
+    exporters:
+      loki:
+        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/loki/api/v1/push"
+    service:
+      pipelines:
+        logs:
+          receivers: [k8sobjects]
+          exporters: [loki]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: k8s-objects-receiver
+  name: k8s-objects-receiver
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-objects-receiver
+  labels:
+    app: k8s-objects-receiver
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "events.k8s.io"
+    resources:
+      - events
+    verbs:
+      - watch
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-objects-receiver
+  labels:
+    app: k8s-objects-receiver
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-objects-receiver
+subjects:
+  - kind: ServiceAccount
+    name: k8s-objects-receiver
+    namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-objects-receiver
+  labels:
+    app: k8s-objects-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-objects-receiver
+  template:
+    metadata:
+      labels:
+        app: k8s-objects-receiver
+    spec:
+      serviceAccountName: k8s-objects-receiver
+      containers:
+        - name: k8s-objects-receiver
+          image: otel/opentelemetry-collector-contrib:latest # specify image
+          args: ["--config", "/etc/config/config.yaml"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: config
+          configMap:
+            name: k8s-objects-receiver

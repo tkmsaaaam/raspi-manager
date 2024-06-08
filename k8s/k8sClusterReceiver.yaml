@@ -1,0 +1,158 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/1d12566c29f8192bfaaabb72c3f2eca8df613a87/receiver/k8sclusterreceiver/README.md
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-cluster-receiver
+  labels:
+    app: k8s-cluster-receiver
+data:
+  config.yaml: |
+    receivers:
+      k8s_cluster:
+        collection_interval: 10s
+    exporters:
+      loki:
+        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/loki/api/v1/push"
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+    service:
+      pipelines:
+        metrics:
+          receivers: [k8s_cluster]
+          exporters: [ prometheus ]
+        logs:
+          receivers: [k8s_cluster]
+          exporters: [loki]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: k8s-cluster-receiver
+  name: k8s-cluster-receiver
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-cluster-receiver
+  labels:
+    app: k8s-cluster-receiver
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - namespaces
+      - namespaces/status
+      - nodes
+      - nodes/spec
+      - pods
+      - pods/status
+      - replicationcontrollers
+      - replicationcontrollers/status
+      - resourcequotas
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-cluster-receiver
+  labels:
+    app: k8s-cluster-receiver
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-cluster-receiver
+subjects:
+  - kind: ServiceAccount
+    name: k8s-cluster-receiver
+    namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-cluster-receiver
+  labels:
+    app: k8s-cluster-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-cluster-receiver
+  template:
+    metadata:
+      labels:
+        app: k8s-cluster-receiver
+    spec:
+      serviceAccountName: k8s-cluster-receiver
+      containers:
+        - name: k8s-cluster-receiver
+          image: otel/opentelemetry-collector-contrib
+          args: ["--config", "/etc/config/config.yaml"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+          imagePullPolicy: IfNotPresent
+      volumes:
+        - name: config
+          configMap:
+            name: k8s-cluster-receiver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-cluster-receiver-svc
+  labels:
+    run: k8s-cluster-receiver-svc
+spec:
+  ports:
+    - port: 8888
+      name: first
+      protocol: TCP
+    - port: 8889
+      name: second
+      protocol: TCP
+  selector:
+    app: k8s-cluster-receiver
