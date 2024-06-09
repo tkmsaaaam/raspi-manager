@@ -16,17 +16,17 @@ spec:
         app: loki
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       containers:
-      - name: loki
-        image: docker.io/grafana/loki@sha256:ce10329af04e1824a382116cc8cfbe26fb91da78b5002ece9847179753aa464f # linux/arm/v8
-        ports:
-        - containerPort: 3100
-        resources:
-          limits:
-            cpu: 200m
-            memory: 512Mi
+        - name: loki
+          image: docker.io/grafana/loki@sha256:ce10329af04e1824a382116cc8cfbe26fb91da78b5002ece9847179753aa464f # linux/arm/v8
+          ports:
+            - containerPort: 3100
+          resources:
+            limits:
+              cpu: 200m
+              memory: 512Mi
 ---
 apiVersion: v1
 kind: Service
@@ -37,7 +37,7 @@ metadata:
   namespace: otel
 spec:
   ports:
-  - port: 3100
-    protocol: TCP
+    - port: 3100
+      protocol: TCP
   selector:
     app: loki

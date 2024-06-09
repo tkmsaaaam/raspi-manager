@@ -13,44 +13,44 @@ spec:
       template:
         spec:
           containers:
-          - name: check-login
-            image: localhost:5000/check-login:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              RESULT=`./AuthlogParser | jq`
-              export MESSAGE="ログイン履歴: $RESULT"
-              /app/slackPublisher
-            volumeMounts:
-            - mountPath: /logs/auth.log
-              name: authlog
-              readOnly: true
-            env:
-            - name: TZ
-              value: Asia/Tokyo
-            - name: LANG
-              value: C.UTF-8
-            - name: LANGUAGE
-              value: en_US
-            - name: SLACK_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_BOT_TOKEN
-            - name: SLACK_CHANNEL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_CHANNEL
-            - name: HOSTNAME
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: HOSTNAME
+            - name: check-login
+              image: localhost:5000/check-login:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  RESULT=`./AuthlogParser | jq`
+                  export MESSAGE="ログイン履歴: $RESULT"
+                  /app/slackPublisher
+              volumeMounts:
+                - mountPath: /logs/auth.log
+                  name: authlog
+                  readOnly: true
+              env:
+                - name: TZ
+                  value: Asia/Tokyo
+                - name: LANG
+                  value: C.UTF-8
+                - name: LANGUAGE
+                  value: en_US
+                - name: SLACK_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_BOT_TOKEN
+                - name: SLACK_CHANNEL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_CHANNEL
+                - name: HOSTNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: HOSTNAME
           volumes:
-          - name: authlog
-            hostPath:
-              path: /var/log/auth.log
-              type: File
+            - name: authlog
+              hostPath:
+                path: /var/log/auth.log
+                type: File
           restartPolicy: Never

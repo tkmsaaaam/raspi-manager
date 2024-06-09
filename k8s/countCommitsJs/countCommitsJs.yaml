@@ -13,44 +13,44 @@ spec:
       template:
         spec:
           containers:
-          - name: count-commits-js
-            image: localhost:5000/count-commits-js:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              echo "$PRIVATE_KEY" > /private-key.pem
-              export GH_TOKEN=`/app/jwt`
-              /app/count-commits-js
-            env:
-            - name: INSTALL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: INSTALL_ID
-            - name: APP_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: APP_ID
-            - name: PRIVATE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: PRIVATE_KEY
-            - name: GH_USER_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: GH_USER_NAME
-            - name: SLACK_BOT_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_BOT_TOKEN
-            - name: SLACK_CHANNEL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_CHANNEL_ID
+            - name: count-commits-js
+              image: localhost:5000/count-commits-js:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "$PRIVATE_KEY" > /private-key.pem
+                  export GH_TOKEN=`/app/jwt`
+                  /app/count-commits-js
+              env:
+                - name: INSTALL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: INSTALL_ID
+                - name: APP_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: APP_ID
+                - name: PRIVATE_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: PRIVATE_KEY
+                - name: GH_USER_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: GH_USER_NAME
+                - name: SLACK_BOT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_BOT_TOKEN
+                - name: SLACK_CHANNEL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_CHANNEL_ID
           restartPolicy: Never

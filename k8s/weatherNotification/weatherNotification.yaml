@@ -13,26 +13,26 @@ spec:
       template:
         spec:
           containers:
-          - name: weather-notification
-            image: localhost:5000/weather-notification:latest
-            command:
-            - /bin/sh
-            - -c
-            - /app/weather-notification
-            env:
-            - name: CITY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: CITY_ID
-            - name: SLACK_BOT_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_BOT_TOKEN
-            - name: SLACK_CHANNEL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: SLACK_CHANNEL_ID
+            - name: weather-notification
+              image: localhost:5000/weather-notification:latest
+              command:
+                - /bin/sh
+                - -c
+                - /app/weather-notification
+              env:
+                - name: CITY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: CITY_ID
+                - name: SLACK_BOT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_BOT_TOKEN
+                - name: SLACK_CHANNEL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_CHANNEL_ID
           restartPolicy: Never

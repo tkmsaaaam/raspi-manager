@@ -16,25 +16,25 @@ spec:
         app: prometheus
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       volumes:
-      - name: prometheus
-        hostPath:
-          path: /etc/prometheus
-          type: Directory
+        - name: prometheus
+          hostPath:
+            path: /etc/prometheus
+            type: Directory
       containers:
-      - name: prometheus
-        image: prom/prometheus
-        ports:
-        - containerPort: 9090
-        volumeMounts:
-        - mountPath: /etc/prometheus
-          name: prometheus
-        resources:
-          limits:
-            cpu: 100m
-            memory: 256Mi
+        - name: prometheus
+          image: prom/prometheus
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - mountPath: /etc/prometheus
+              name: prometheus
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
@@ -45,8 +45,8 @@ metadata:
   namespace: otel
 spec:
   ports:
-  - port: 9090
-    protocol: TCP
+    - port: 9090
+      protocol: TCP
   selector:
     app: prometheus
 ---
@@ -60,6 +60,6 @@ spec:
     app: prometheus
   type: NodePort
   ports:
-  - port: 9090
-    nodePort: 30001
-    protocol: TCP
+    - port: 9090
+      nodePort: 30001
+      protocol: TCP

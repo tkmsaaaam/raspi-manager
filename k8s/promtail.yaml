@@ -16,28 +16,28 @@ spec:
         app: promtail
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       nodeSelector:
         kubernetes.io/hostname: raspberrypi
       volumes:
-      - name: logs
-        hostPath:
-          path: /var/log
-          type: Directory
-      - name: config
-        hostPath:
-          path: /etc/promtail/config.yml
-          type: File
-      containers:
-      - name: promtail
-        image: grafana/promtail
-        volumeMounts:
         - name: logs
-          mountPath: /var/log
+          hostPath:
+            path: /var/log
+            type: Directory
         - name: config
-          mountPath: /etc/promtail/config.yml
-        resources:
-          limits:
-            cpu: 200m
-            memory: 256Mi
+          hostPath:
+            path: /etc/promtail/config.yml
+            type: File
+      containers:
+        - name: promtail
+          image: grafana/promtail
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log
+            - name: config
+              mountPath: /etc/promtail/config.yml
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi

@@ -16,24 +16,24 @@ spec:
         app: grafana
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       volumes:
-      - name: grafana-pv
-        persistentVolumeClaim:
-          claimName: grafana-pvc
+        - name: grafana-pv
+          persistentVolumeClaim:
+            claimName: grafana-pvc
       containers:
-      - name: grafana
-        image: docker.io/grafana/grafana:main # linux/arm/v7
-        ports:
-        - containerPort: 3000
-        volumeMounts:
-        - mountPath: /var/lib/grafana
-          name: grafana-pv
-        resources:
-          limits:
-            cpu: 100m
-            memory: 256Mi
+        - name: grafana
+          image: docker.io/grafana/grafana:main # linux/arm/v7
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -65,7 +65,7 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   storageClassName: local-storage
   hostPath:
     path: /var/lib/grafana
@@ -79,8 +79,8 @@ metadata:
   namespace: otel
 spec:
   ports:
-  - port: 3000
-    protocol: TCP
+    - port: 3000
+      protocol: TCP
   selector:
     app: grafana
 ---
@@ -94,6 +94,6 @@ spec:
     app: grafana
   type: NodePort
   ports:
-  - port: 3000
-    nodePort: 30000
-    protocol: TCP
+    - port: 3000
+      nodePort: 30000
+      protocol: TCP

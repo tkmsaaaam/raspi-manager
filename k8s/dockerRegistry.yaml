@@ -16,24 +16,24 @@ spec:
     spec:
       hostNetwork: true
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       nodeSelector:
         kubernetes.io/hostname: raspberrypi
       containers:
-      - name: docker-registry
-        image: registry:latest
-        ports:
-        - containerPort: 5000
-        volumeMounts:
-        - name: registry
-          mountPath: /var/lib/registry
-        resources:
-          limits:
-            cpu: 100m
-            memory: 256Mi
+        - name: docker-registry
+          image: registry:latest
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: registry
+              mountPath: /var/lib/registry
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
       volumes:
-      - name: registry
-        hostPath:
-          type: Directory
-          path: /var/lib/registry
+        - name: registry
+          hostPath:
+            type: Directory
+            path: /var/lib/registry

@@ -16,25 +16,25 @@ spec:
         app: alertmanager
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       volumes:
-      - name: alertmanager
-        hostPath:
-          path: /etc/alertmanager
-          type: Directory
+        - name: alertmanager
+          hostPath:
+            path: /etc/alertmanager
+            type: Directory
       containers:
-      - name: alertmanager
-        image: prom/alertmanager
-        ports:
-        - containerPort: 9093
-        volumeMounts:
-        - mountPath: /etc/alertmanager
-          name: alertmanager
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
+        - name: alertmanager
+          image: prom/alertmanager
+          ports:
+            - containerPort: 9093
+          volumeMounts:
+            - mountPath: /etc/alertmanager
+              name: alertmanager
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -45,8 +45,8 @@ metadata:
   namespace: otel
 spec:
   ports:
-  - port: 9093
-    protocol: TCP
+    - port: 9093
+      protocol: TCP
   selector:
     app: alertmanager
 ---
@@ -60,6 +60,6 @@ spec:
     app: alertmanager
   type: NodePort
   ports:
-  - port: 9093
-    nodePort: 30002
-    protocol: TCP
+    - port: 9093
+      nodePort: 30002
+      protocol: TCP
