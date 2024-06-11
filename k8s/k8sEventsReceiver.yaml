@@ -124,12 +124,16 @@ spec:
       serviceAccountName: k8s-events-receiver
       containers:
         - name: k8s-events-receiver
-          image: otel/opentelemetry-collector-contrib:latest # specify image
+          image: otel/opentelemetry-collector-contrib:latest
           args: ["--config", "/etc/config/config.yaml"]
           volumeMounts:
             - name: config
               mountPath: /etc/config
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 100m
+              memory: 512Mi
       volumes:
         - name: config
           configMap:

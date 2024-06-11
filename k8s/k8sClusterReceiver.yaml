@@ -135,6 +135,10 @@ spec:
             - name: config
               mountPath: /etc/config
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 100m
+              memory: 512Mi
       volumes:
         - name: config
           configMap:
