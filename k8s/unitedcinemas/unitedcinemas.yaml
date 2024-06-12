@@ -33,7 +33,7 @@ spec:
                   valueFrom:
                     secretKeyRef:
                       name: common-secrets
-                      key: SLACK_CHANNEL
+                      key: SLACK_CHANNEL_ID
                 - name: THEATER
                   valueFrom:
                     secretKeyRef:
