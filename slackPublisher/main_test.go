@@ -272,6 +272,9 @@ func TestSendFromFile(t *testing.T) {
 				f, _ := os.CreateTemp("", "message.txt")
 				f.WriteString(tt.message)
 				t.Setenv("FILE_PATH", f.Name())
+				defer func() {
+					os.Remove("message.txt")
+				}()
 			}
 
 			Client{Client: client}.sendFromFile("channel")
