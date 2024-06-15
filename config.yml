@@ -21,3 +21,16 @@ scrape_configs:
         labels:
           job: messages
           __path__: /var/log/messages
+  - job_name: journal
+    journal:
+      path: /var/log/journal
+      labels:
+        job: "journal"
+    relabel_configs:
+      - source_labels: [__journal_systemd_unit]
+        regex: ^session-\d+.scope$
+        action: drop
+      - source_labels: ['__journal__hostname']
+        target_label: 'host'
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
