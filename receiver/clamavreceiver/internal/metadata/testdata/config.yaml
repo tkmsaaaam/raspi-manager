@@ -1,0 +1,9 @@
+default:
+all_set:
+  metrics:
+    clamav.infected.count:
+      enabled: true
+none_set:
+  metrics:
+    clamav.infected.count:
+      enabled: false

@@ -1,0 +1,11 @@
+dist:
+  module: github.com/tkmsaaaam/raspi-manager/receiver
+  name: clamav
+  description: Custom OpenTelemetry Collector binary
+  output_path: .
+receivers:
+  - gomod: github.com/tkmsaaaam/raspi-manager/receiver/clamavreceiver v0.0.0
+exporters:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.102.0
+replaces:
+  - github.com/tkmsaaaam/raspi-manager/receiver/clamavreceiver => ./clamavreceiver

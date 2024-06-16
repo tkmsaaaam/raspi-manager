@@ -1,0 +1,21 @@
+type: clamav
+status:
+  class: receiver
+  stability:
+    development: [metrics]
+  codeowners:
+    active: [tkmsaaaam]
+attributes:
+  host:
+    description: "The hostname"
+    type: string
+metrics:
+  clamav.infected.count:
+    description: "The number of files were infected"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    enabled: true
+    unit: 1
+    attributes: [host]

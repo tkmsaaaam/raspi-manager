@@ -1,0 +1,4 @@
+clamav
+**.go
+go.mod
+go.sum
