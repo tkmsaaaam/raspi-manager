@@ -78,14 +78,14 @@ func (ch *clamavHandler) scrape() (int64, error) {
 	defer fp.Close()
 
 	scanner := bufio.NewScanner(fp)
+	var i int64 = -1
 	for scanner.Scan() {
 		if strings.HasPrefix(scanner.Text(), "Infected files: ") {
-			i, err := strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
+			i, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
 			if err != nil {
-				return 0, err
+				return i, err
 			}
-			return i, nil
 		}
 	}
-	return -1, nil
+	return i, nil
 }
