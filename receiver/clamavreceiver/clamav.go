@@ -46,15 +46,23 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 		return err
 	}
 
+	var hostname string
+	var b bool
+	hostname, b = os.LookupEnv("HOSTNAME")
+	if !b {
+		hostname = "localhost"
+	}
+
+
 	ticker := time.NewTicker(d)
 TICK:
 	for {
 		now := pcommon.NewTimestampFromTime(time.Now())
 		i, err := sh.scrape()
 		if err != nil {
-			log.Panicln("read file error", err)
+			log.Println("read file error", err)
 		} else if i >= 0 {
-			sh.mb.RecordClamavInfectedCountDataPoint(now, i, "host")
+			sh.mb.RecordClamavInfectedCountDataPoint(now, i, hostname)
 		}
 		select {
 		case <-ticker.C:
