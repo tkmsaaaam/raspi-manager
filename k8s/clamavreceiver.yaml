@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clamavreceiver
+  labels:
+    app: clamavreceiver
+  namespace: otel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clamavreceiver
+  template:
+    metadata:
+      labels:
+        app: clamavreceiver
+    spec:
+      hostNetwork: true
+      containers:
+        - name: clamavreceiver
+          image: localhost:5000/clamavreceiver:latest
+          command:
+            - /bin/sh
+            - -c
+            - /app/clamav --config=/config/config.yaml
+          volumeMounts:
+            - name: scanlog
+              mountPath: /var/log/clamdscan.log
+            - name: config
+              mountPath: /config
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+      volumes:
+        - name: scanlog
+          hostPath:
+            path: /var/log/clamdscan.log
+            type: File
+        - name: config
+          configMap:
+            name: clamavreceiver-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clamav-svc
+  labels:
+    run: clamav-svc
+  namespace: otel
+spec:
+  ports:
+    - port: 1234
+      protocol: TCP
+  selector:
+    app: clamavreceiver
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clamavreceiver-config
+  labels:
+    app: clamavreceiver-config
+  namespace: otel
+data:
+  config.yaml: |
+    receivers:
+      clamav:
+    exporters:
+      prometheus:
+        endpoint: "0.0.0.0:1234"
+    service:
+      pipelines:
+        metrics:
+          receivers: [clamav]
+          exporters: [prometheus]
