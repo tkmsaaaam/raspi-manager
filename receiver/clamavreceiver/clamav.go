@@ -53,16 +53,23 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 		hostname = "localhost"
 	}
 
-
 	ticker := time.NewTicker(d)
 TICK:
 	for {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		i, err := sh.scrape()
+		infectedCount, totalError, time, err := sh.scrape()
 		if err != nil {
 			log.Println("read file error", err)
-		} else if i >= 0 {
-			sh.mb.RecordClamavInfectedCountDataPoint(now, i, hostname)
+		} else {
+			if infectedCount >= 0 {
+				sh.mb.RecordClamavInfectedCountDataPoint(now, infectedCount, hostname)
+			}
+			if totalError >= 0 {
+				sh.mb.RecordClamavErrorsCountDataPoint(now, totalError, hostname)
+			}
+			if time >= 0 {
+				sh.mb.RecordClamavScanElapsedTimeDataPoint(now, time, hostname)
+			}
 		}
 		select {
 		case <-ticker.C:
@@ -78,22 +85,36 @@ TICK:
 	return nil
 }
 
-func (ch *clamavHandler) scrape() (int64, error) {
+func (ch *clamavHandler) scrape() (int64, int64, float64, error) {
 	fp, err := os.Open(ch.config.logFilePath)
 	if err != nil {
-		return -1, err
+		return -1, -1, -1, err
 	}
 	defer fp.Close()
 
 	scanner := bufio.NewScanner(fp)
-	var i int64 = -1
+	var infectedCount int64 = -1
+	var totalError int64 = -1
+	var time float64 = -1
 	for scanner.Scan() {
 		if strings.HasPrefix(scanner.Text(), "Infected files: ") {
-			i, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
+			infectedCount, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
 			if err != nil {
-				return i, err
+				return infectedCount, totalError, time, err
+			}
+		}
+		if strings.HasPrefix(scanner.Text(), "Total errors: ") {
+			totalError, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
+			if err != nil {
+				return infectedCount, totalError, time, err
+			}
+		}
+		if strings.HasPrefix(scanner.Text(), "Time: ") {
+			time, err = strconv.ParseFloat(strings.TrimSpace(strings.Split(strings.Split(scanner.Text(), ":")[1], "sec")[0]), 10)
+			if err != nil {
+				return infectedCount, totalError, time, err
 			}
 		}
 	}
-	return i, nil
+	return infectedCount, totalError, time, err
 }

@@ -19,3 +19,21 @@ metrics:
     enabled: true
     unit: 1
     attributes: [host]
+  clamav.errors.count:
+    description: "The number of errors"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    enabled: true
+    unit: 1
+    attributes: [host]
+  clamav.scan.elapsed.time:
+    description: "The number of elapsed time"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    enabled: true
+    unit: 1
+    attributes: [host]

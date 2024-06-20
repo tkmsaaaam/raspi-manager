@@ -1,9 +1,17 @@
 default:
 all_set:
   metrics:
+    clamav.errors.count:
+      enabled: true
     clamav.infected.count:
+      enabled: true
+    clamav.scan.elapsed.time:
       enabled: true
 none_set:
   metrics:
+    clamav.errors.count:
+      enabled: false
     clamav.infected.count:
+      enabled: false
+    clamav.scan.elapsed.time:
       enabled: false

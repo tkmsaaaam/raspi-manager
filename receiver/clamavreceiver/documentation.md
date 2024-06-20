@@ -12,6 +12,20 @@ metrics:
     enabled: false
 ```
 
+### clamav.errors.count
+
+The number of errors
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| 1 | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values |
+| ---- | ----------- | ------ |
+| host | The hostname | Any Str |
+
 ### clamav.infected.count
 
 The number of files were infected
@@ -19,6 +33,20 @@ The number of files were infected
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | 1 | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values |
+| ---- | ----------- | ------ |
+| host | The hostname | Any Str |
+
+### clamav.scan.elapsed.time
+
+The number of elapsed time
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| 1 | Sum | Double | Cumulative | true |
 
 #### Attributes
 
