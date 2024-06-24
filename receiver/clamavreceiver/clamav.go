@@ -57,7 +57,7 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 TICK:
 	for {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		infectedCount, totalError, time, err := sh.scrape()
+		infectedCount, totalError, time, err := sh.scrape(d, now)
 		if err != nil {
 			log.Println("read file error", err)
 		} else {
@@ -85,7 +85,7 @@ TICK:
 	return nil
 }
 
-func (ch *clamavHandler) scrape() (int64, int64, float64, error) {
+func (ch *clamavHandler) scrape(d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
 	fp, err := os.Open(ch.config.logFilePath)
 	if err != nil {
 		return -1, -1, -1, err
@@ -95,26 +95,39 @@ func (ch *clamavHandler) scrape() (int64, int64, float64, error) {
 	scanner := bufio.NewScanner(fp)
 	var infectedCount int64 = -1
 	var totalError int64 = -1
-	var time float64 = -1
+	var elapsedTime float64 = -1
+	var date time.Time
 	for scanner.Scan() {
-		if strings.HasPrefix(scanner.Text(), "Infected files: ") {
-			infectedCount, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
+		line := scanner.Text()
+		if strings.HasPrefix(line, "Infected files: ") {
+			infectedCount, err = strconv.ParseInt(strings.TrimSpace(strings.Split(line, ":")[1]), 10, 64)
 			if err != nil {
-				return infectedCount, totalError, time, err
+				return infectedCount, totalError, elapsedTime, err
 			}
 		}
-		if strings.HasPrefix(scanner.Text(), "Total errors: ") {
-			totalError, err = strconv.ParseInt(strings.TrimSpace(strings.Split(scanner.Text(), ":")[1]), 10, 64)
+		if strings.HasPrefix(line, "Total errors: ") {
+			totalError, err = strconv.ParseInt(strings.TrimSpace(strings.Split(line, ":")[1]), 10, 64)
 			if err != nil {
-				return infectedCount, totalError, time, err
+				return infectedCount, totalError, elapsedTime, err
 			}
 		}
-		if strings.HasPrefix(scanner.Text(), "Time: ") {
-			time, err = strconv.ParseFloat(strings.TrimSpace(strings.Split(strings.Split(scanner.Text(), ":")[1], "sec")[0]), 10)
+		if strings.HasPrefix(line, "Time: ") {
+			elapsedTime, err = strconv.ParseFloat(strings.TrimSpace(strings.Split(strings.Split(line, ":")[1], "sec")[0]), 10)
 			if err != nil {
-				return infectedCount, totalError, time, err
+				return infectedCount, totalError, elapsedTime, err
+			}
+		}
+		if strings.HasPrefix(line, "End Date:") {
+			dateStr := strings.Replace("End Date:   2024:06:23 03:14:12", "End Date:   ", "", 1)
+			var e error
+			date, e = time.Parse("2006:01:02 15:04:05", dateStr)
+			if e != nil {
+				return -1, -1, -1, nil
+			}
+			if now.AsTime().Add(-d).Before(date) {
+				return infectedCount, totalError, elapsedTime, err
 			}
 		}
 	}
-	return infectedCount, totalError, time, err
+	return -1, -1, -1, nil
 }
