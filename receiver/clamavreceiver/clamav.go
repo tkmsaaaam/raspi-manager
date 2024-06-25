@@ -57,7 +57,14 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 TICK:
 	for {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		infectedCount, totalError, time, err := sh.scrape(d, now)
+		fp, err := os.Open(sh.config.logFilePath)
+		if err != nil {
+			log.Println("read file error", err)
+		}
+		defer fp.Close()
+
+		scanner := bufio.NewScanner(fp)
+		infectedCount, totalError, time, err := sh.scrape(scanner, d, now)
 		if err != nil {
 			log.Println("read file error", err)
 		} else {
@@ -85,14 +92,8 @@ TICK:
 	return nil
 }
 
-func (ch *clamavHandler) scrape(d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
-	fp, err := os.Open(ch.config.logFilePath)
-	if err != nil {
-		return -1, -1, -1, err
-	}
-	defer fp.Close()
-
-	scanner := bufio.NewScanner(fp)
+func (ch *clamavHandler) scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
+	var err error
 	var infectedCount int64 = -1
 	var totalError int64 = -1
 	var elapsedTime float64 = -1
