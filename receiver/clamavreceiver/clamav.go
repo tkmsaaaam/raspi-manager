@@ -64,7 +64,7 @@ TICK:
 		defer fp.Close()
 
 		scanner := bufio.NewScanner(fp)
-		infectedCount, totalError, time, err := sh.scrape(scanner, d, now)
+		infectedCount, totalError, time, err := scrape(scanner, d, now)
 		if err != nil {
 			log.Println("read file error", err)
 		} else {
@@ -92,7 +92,7 @@ TICK:
 	return nil
 }
 
-func (ch *clamavHandler) scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
+func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
 	var err error
 	var infectedCount int64 = -1
 	var totalError int64 = -1
@@ -119,7 +119,7 @@ func (ch *clamavHandler) scrape(scanner *bufio.Scanner, d time.Duration, now pco
 			}
 		}
 		if strings.HasPrefix(line, "End Date:") {
-			dateStr := strings.Replace("End Date:   2024:06:23 03:14:12", "End Date:   ", "", 1)
+			dateStr := strings.Replace(line, "End Date:   ", "", 1)
 			var e error
 			date, e = time.Parse("2006:01:02 15:04:05", dateStr)
 			if e != nil {
