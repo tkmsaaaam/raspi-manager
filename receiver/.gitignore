@@ -1,4 +1,6 @@
 clamav
+**.html
+**.out
 **.go
 go.mod
 go.sum
