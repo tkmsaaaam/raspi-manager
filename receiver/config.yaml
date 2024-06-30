@@ -1,0 +1,10 @@
+receivers:
+  clamav:
+exporters:
+  prometheus:
+    endpoint: "localhost:1234"
+service:
+  pipelines:
+    metrics:
+      receivers: [clamav]
+      exporters: [prometheus]
