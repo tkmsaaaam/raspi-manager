@@ -57,7 +57,7 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 TICK:
 	for {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		fp, err := os.Open(sh.config.logFilePath)
+		fp, err := os.Open(sh.config.LogFilePath)
 		if err != nil {
 			log.Println("read file error", err)
 		}

@@ -1,6 +1,7 @@
 package clamavreceiver
 
 import (
+	"errors"
 	"time"
 
 	"github.com/tkmsaaaam/raspi-manager/receiver/clamavreceiver/internal/metadata"
@@ -9,14 +10,14 @@ import (
 
 type Config struct {
 	BufferInterval       string `mapstructure:"buffer_interval"`
-	logFilePath          string `mapstructure:"log_file_path"`
+	LogFilePath          string `mapstructure:"log_file_path"`
 	MetricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
 func createDefaultConfig() component.Config {
 	return &Config{
 		BufferInterval:       "10s",
-		logFilePath:          "/var/log/clamdscan.log",
+		LogFilePath:          "/var/log/clamdscan.log",
 		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
 	}
 }
@@ -26,6 +27,9 @@ var _ component.Config = (*Config)(nil)
 func (c Config) Validate() error {
 	if _, err := time.ParseDuration(c.BufferInterval); err != nil {
 		return err
+	}
+	if c.LogFilePath == "" {
+		return errors.New("file path is not present")
 	}
 	return nil
 }
