@@ -120,13 +120,12 @@ func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int
 		}
 		if strings.HasPrefix(line, "End Date:") {
 			dateStr := strings.Replace(line, "End Date:   ", "", 1)
-			var e error
-			date, e = time.Parse("2006:01:02 15:04:05", dateStr)
-			if e != nil {
+			date, err = time.Parse("2006:01:02 15:04:05", dateStr)
+			if err != nil {
 				return -1, -1, -1, nil
 			}
 			if now.AsTime().Add(-d).Before(date) {
-				return infectedCount, totalError, elapsedTime, err
+				return infectedCount, totalError, elapsedTime, nil
 			}
 		}
 	}
