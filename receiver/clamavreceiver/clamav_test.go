@@ -26,14 +26,19 @@ func TestScrape(t *testing.T) {
 			text: "",
 			want: Want{-1, -1, -1, nil},
 		},
+				{
+			name: "input is present and within interval",
+			text: "Infected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			want: Want{1, 1, 60.1, nil},
+		},
 		{
-			name: "input is present",
-			text: "Infected files: 0\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:44",
-			want: Want{0, 1, 60.1, nil},
+			name: "input is present and same interval",
+			text: "Infected files: 0\nTotal errors: 0\nTime: 0 sec (0 m )\nEnd Date:   2024:06:26 03:14:36",
+			want: Want{0, 0, 0, nil},
 		},
 		{
 			name: "input is present but not within interval",
-			text: "Infected files: 0\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:03:59",
+			text: "Infected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:35",
 			want: Want{-1, -1, -1, nil},
 		},
 	}
