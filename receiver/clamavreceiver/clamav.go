@@ -93,6 +93,7 @@ TICK:
 }
 
 func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
+	var b bool = false
 	var err error
 	var infectedCount int64 = -1
 	var totalError int64 = -1
@@ -100,6 +101,12 @@ func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int
 	var date time.Time
 	for scanner.Scan() {
 		line := scanner.Text()
+		if line == "----------- SCAN SUMMARY -----------" {
+			b = true
+		}
+		if !b {
+			continue
+		}
 		if strings.HasPrefix(line, "Infected files: ") {
 			infectedCount, err = strconv.ParseInt(strings.TrimSpace(strings.Split(line, ":")[1]), 10, 64)
 			if err != nil {
