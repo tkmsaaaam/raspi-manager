@@ -131,8 +131,14 @@ func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int
 			if err != nil {
 				return -1, -1, -1, nil
 			}
+			b = false
 			if now.AsTime().Add(-d).Before(date) {
 				return infectedCount, totalError, elapsedTime, nil
+			} else {
+				infectedCount = -1
+				totalError = -1
+				elapsedTime = -1
+				err = nil
 			}
 		}
 	}
