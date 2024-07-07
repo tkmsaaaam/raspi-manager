@@ -27,6 +27,11 @@ func TestScrape(t *testing.T) {
 			want: Want{-1, -1, -1, nil},
 		},
 		{
+			name: "input is present but not include start line",
+			text: "Infected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			want: Want{-1, -1, -1, nil},
+		},
+		{
 			name: "input is present and within interval",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
 			want: Want{1, 1, 60.1, nil},
@@ -38,11 +43,11 @@ func TestScrape(t *testing.T) {
 		},
 		{
 			name: "input is present and within interval",
-			text: "\nInfected files: 2\nTotal errors: 2\nTime: 120.1 sec (2 m )\nEnd Date:   2024:06:26 03:14:37\n----------- SCAN SUMMARY -----------\nInfected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			text: "Infected files: 2\nTotal errors: 2\nTime: 120.1 sec (2 m )\nEnd Date:   2024:06:26 03:14:37\n----------- SCAN SUMMARY -----------\nInfected files: 1\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
 			want: Want{1, 1, 60.1, nil},
 		},
 		{
-			name: "input is presents last one",
+			name: "input is present last one",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 2\nTotal errors: 2\nTime: 120.1 sec (2 m )\nEnd Date:   2024:06:26 03:14:36\n----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: 0 sec (0 m )\nEnd Date:   2024:06:26 03:14:37",
 			want: Want{0, 0, 0, nil},
 		},
