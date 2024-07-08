@@ -2,6 +2,7 @@ package clamavreceiver
 
 import (
 	"bufio"
+	"errors"
 	"strings"
 	"testing"
 	"time"
@@ -47,9 +48,29 @@ func TestScrape(t *testing.T) {
 			want: Want{1, 1, 60.1, nil},
 		},
 		{
-			name: "input is present last one",
+			name: "input is present first one",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 2\nTotal errors: 2\nTime: 120.1 sec (2 m )\nEnd Date:   2024:06:26 03:14:36\n----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: 0 sec (0 m )\nEnd Date:   2024:06:26 03:14:37",
-			want: Want{0, 0, 0, nil},
+			want: Want{2, 2, 120.1, nil},
+		},
+		{
+			name: "infected files invalid",
+			text: "----------- SCAN SUMMARY -----------\nInfected files: -\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			want: Want{-1, -1, -1, errors.New("Infected files value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
+		},
+		{
+			name: "total erros invalid",
+			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: -\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			want: Want{-1, -1, -1, errors.New("Total errors value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
+		},
+		{
+			name: "time invalid",
+			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: - sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
+			want: Want{-1, -1, -1, errors.New("Time value invalid: strconv.ParseFloat: parsing \"-\": invalid syntax")},
+		},
+		{
+			name: "end date invalid",
+			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: 60.1 sec (1 m )\nEnd Date:   -",
+			want: Want{-1, -1, -1, errors.New("Time value invalid: parsing time \"-\" as \"2006:01:02 15:04:05\": cannot parse \"-\" as \"2006\"")},
 		},
 	}
 	for _, tt := range tests {
@@ -61,17 +82,17 @@ func TestScrape(t *testing.T) {
 			now := time.Date(2024, 6, 26, 3, 14, 45, 11, &time.Location{})
 			i, ttt, e, err := scrape(scanner, d, pcommon.NewTimestampFromTime(now))
 			if i != tt.want.infectedCount {
-				t.Errorf("scrape() infectedCount, actual: %v, want: %v", i, tt.want.infectedCount)
+				t.Errorf("scrape() infectedCount, actual: \n%v\nwant: \n%v", i, tt.want.infectedCount)
 			}
 			if ttt != tt.want.totalError {
-				t.Errorf("scrape() totalError, actual: %v, want: %v", t, tt.want.totalError)
+				t.Errorf("scrape() totalError, actual: \n%v\nwant: \n%v", t, tt.want.totalError)
 			}
 			if e != tt.want.elapsedTime {
-				t.Errorf("scrape() elapsedTime, actual: %v, want: %v", e, tt.want.elapsedTime)
+				t.Errorf("scrape() elapsedTime, actual: \n%v\nwant: \n%v", e, tt.want.elapsedTime)
 			}
 			if err != nil || tt.want.err != nil {
 				if err.Error() != tt.want.err.Error() {
-					t.Errorf("scrape() error, actual: %v, want %v", err, tt.want.err)
+					t.Errorf("scrape() error, actual: \n%v, want: \n%v", err, tt.want.err)
 				}
 			}
 		})
