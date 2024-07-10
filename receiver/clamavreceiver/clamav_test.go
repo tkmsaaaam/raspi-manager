@@ -60,22 +60,22 @@ func TestScrape(t *testing.T) {
 		{
 			name: "infected files invalid",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: -\nTotal errors: 1\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
-			want: Want{-1, -1, -1, errors.New("Infected files value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
+			want: Want{-1, -1, -1, errors.New("infected files value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
 		},
 		{
 			name: "total erros invalid",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: -\nTime: 60.1 sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
-			want: Want{-1, -1, -1, errors.New("Total errors value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
+			want: Want{-1, -1, -1, errors.New("total errors value invalid: strconv.ParseInt: parsing \"-\": invalid syntax")},
 		},
 		{
 			name: "time invalid",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: - sec (1 m )\nEnd Date:   2024:06:26 03:14:37",
-			want: Want{-1, -1, -1, errors.New("Time value invalid: strconv.ParseFloat: parsing \"-\": invalid syntax")},
+			want: Want{-1, -1, -1, errors.New("time value invalid: strconv.ParseFloat: parsing \"-\": invalid syntax")},
 		},
 		{
 			name: "end date invalid",
 			text: "----------- SCAN SUMMARY -----------\nInfected files: 0\nTotal errors: 0\nTime: 60.1 sec (1 m )\nEnd Date:   -",
-			want: Want{-1, -1, -1, errors.New("Time value invalid: parsing time \"-\" as \"2006:01:02 15:04:05\": cannot parse \"-\" as \"2006\"")},
+			want: Want{-1, -1, -1, errors.New("time value invalid: parsing time \"-\" as \"2006:01:02 15:04:05\": cannot parse \"-\" as \"2006\"")},
 		},
 	}
 	for _, tt := range tests {

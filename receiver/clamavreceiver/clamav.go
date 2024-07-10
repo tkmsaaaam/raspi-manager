@@ -111,26 +111,26 @@ func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int
 		if strings.HasPrefix(line, "Infected files: ") {
 			infectedCount, err = strconv.ParseInt(strings.TrimSpace(strings.Split(line, ":")[1]), 10, 64)
 			if err != nil {
-				return -1, -1, -1, fmt.Errorf("Infected files value invalid: %s", err)
+				return -1, -1, -1, fmt.Errorf("infected files value invalid: %s", err)
 			}
 		}
 		if strings.HasPrefix(line, "Total errors: ") {
 			totalError, err = strconv.ParseInt(strings.TrimSpace(strings.Split(line, ":")[1]), 10, 64)
 			if err != nil {
-				return -1, -1, -1, fmt.Errorf("Total errors value invalid: %s", err)
+				return -1, -1, -1, fmt.Errorf("total errors value invalid: %s", err)
 			}
 		}
 		if strings.HasPrefix(line, "Time: ") {
 			elapsedTime, err = strconv.ParseFloat(strings.TrimSpace(strings.Split(strings.Split(line, ":")[1], "sec")[0]), 10)
 			if err != nil {
-				return -1, -1, -1, fmt.Errorf("Time value invalid: %s", err)
+				return -1, -1, -1, fmt.Errorf("time value invalid: %s", err)
 			}
 		}
 		if strings.HasPrefix(line, "End Date:") {
 			dateStr := strings.Replace(line, "End Date:   ", "", 1)
 			date, err = time.Parse("2006:01:02 15:04:05", dateStr)
 			if err != nil {
-				return -1, -1, -1, fmt.Errorf("Time value invalid: %s", err)
+				return -1, -1, -1, fmt.Errorf("time value invalid: %s", err)
 			}
 			b = false
 			if now.AsTime().Add(-d).Before(date) {
