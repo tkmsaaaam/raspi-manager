@@ -60,15 +60,16 @@ TICK:
 		now := pcommon.NewTimestampFromTime(time.Now())
 		fp, err := os.Open(sh.config.LogFilePath)
 		if err != nil {
-			log.Println("read file error", err)
+			log.Println("read file error: ", err)
 		}
 		defer fp.Close()
 
 		scanner := bufio.NewScanner(fp)
 		infectedCount, totalError, time, err := scrape(scanner, d, now)
 		if err != nil {
-			log.Println("read file error", err)
+			log.Println("scrape failed: ", err)
 		} else {
+			log.Printf("now: %s, infected: %d, error: %d, time: %f\n", now.AsTime().GoString(), infectedCount, totalError, time)
 			if infectedCount >= 0 {
 				sh.mb.RecordClamavInfectedCountDataPoint(now, infectedCount, hostname)
 			}
