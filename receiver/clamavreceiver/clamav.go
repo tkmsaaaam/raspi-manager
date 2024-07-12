@@ -57,7 +57,8 @@ func (sh *clamavHandler) run(ctx context.Context) error {
 	ticker := time.NewTicker(d)
 TICK:
 	for {
-		now := pcommon.NewTimestampFromTime(time.Now())
+		n := time.Now()
+		now := pcommon.NewTimestampFromTime(n)
 		fp, err := os.Open(sh.config.LogFilePath)
 		if err != nil {
 			log.Println("read file error: ", err)
@@ -65,7 +66,7 @@ TICK:
 		defer fp.Close()
 
 		scanner := bufio.NewScanner(fp)
-		infectedCount, totalError, time, err := scrape(scanner, d, now)
+		infectedCount, totalError, time, err := scrape(scanner, d, n)
 		if err != nil {
 			log.Println("scrape failed: ", err)
 		} else {
@@ -94,7 +95,7 @@ TICK:
 	return nil
 }
 
-func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int64, int64, float64, error) {
+func scrape(scanner *bufio.Scanner, d time.Duration, now time.Time) (int64, int64, float64, error) {
 	var b bool = false
 	var err error
 	var infectedCount int64 = -1
@@ -134,7 +135,7 @@ func scrape(scanner *bufio.Scanner, d time.Duration, now pcommon.Timestamp) (int
 				return -1, -1, -1, fmt.Errorf("time value invalid: %s", err)
 			}
 			b = false
-			if now.AsTime().Add(-d).Before(date) {
+			if now.Add(-d).Before(date) {
 				return infectedCount, totalError, elapsedTime, nil
 			} else {
 				infectedCount = -1

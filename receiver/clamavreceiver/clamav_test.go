@@ -6,8 +6,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	"go.opentelemetry.io/collector/pdata/pcommon"
 )
 
 func TestScrape(t *testing.T) {
@@ -85,7 +83,7 @@ func TestScrape(t *testing.T) {
 			scanner := bufio.NewScanner(reader)
 			d, _ := time.ParseDuration("10s")
 			now := time.Date(2024, 6, 26, 3, 14, 45, 11, &time.Location{})
-			i, ttt, e, err := scrape(scanner, d, pcommon.NewTimestampFromTime(now))
+			i, ttt, e, err := scrape(scanner, d, now)
 			if i != tt.want.infectedCount {
 				t.Errorf("scrape() infectedCount, actual: \n%v\nwant: \n%v", i, tt.want.infectedCount)
 			}
