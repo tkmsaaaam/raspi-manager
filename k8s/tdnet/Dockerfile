@@ -12,7 +12,7 @@ RUN git clone https://github.com/tkmsaaaam/raspi-manager.git --depth 1
 WORKDIR /work/raspi-manager/slackPublisher
 RUN go install && go build
 
-FROM node:21-bookworm-slim
+FROM node:22-bookworm-slim
 COPY --from=clone /app/browser-operator/tdnet /app/tdnet
 COPY --from=build /work/raspi-manager/slackPublisher/slackPublisher /app/slackPublisher
 RUN apt-get update -y  && apt-get install --no-install-recommends -y ca-certificates &&  apt-get clean && rm -rf /var/lib/apt/lists/*

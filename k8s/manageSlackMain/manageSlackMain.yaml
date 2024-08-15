@@ -5,7 +5,7 @@ metadata:
   namespace: tasks
 spec:
   schedule: "43 * * * *"
-  successfulJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
