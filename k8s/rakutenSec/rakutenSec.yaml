@@ -5,7 +5,7 @@ metadata:
   namespace: tasks
 spec:
   schedule: "37 20 * * *"
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
@@ -20,7 +20,7 @@ spec:
                 - -c
                 - |
                   npm install
-                  npm run start
+                  npm run job
                   export FILE_PATH=/app/rakuten-sec/output.txt
                   /app/slackPublisher
               env:
