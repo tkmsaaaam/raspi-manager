@@ -18,7 +18,7 @@ metrics:
       aggregation_temporality: cumulative
       value_type: int
     enabled: true
-    unit: 1
+    unit: "1"
     attributes: [host]
   clamav.errors.count:
     description: "The number of errors"
@@ -27,7 +27,7 @@ metrics:
       aggregation_temporality: cumulative
       value_type: int
     enabled: true
-    unit: 1
+    unit: "1"
     attributes: [host]
   clamav.scan.elapsed.time:
     description: "The number of elapsed time"
@@ -36,5 +36,5 @@ metrics:
       aggregation_temporality: cumulative
       value_type: double
     enabled: true
-    unit: 1
+    unit: "1"
     attributes: [host]

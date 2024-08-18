@@ -26,7 +26,7 @@ type clamavHandler struct {
 	mb       *metadata.MetricsBuilder
 }
 
-func newClamavHandler(consumer consumer.Metrics, cfg *Config, settings receiver.CreateSettings, obsrecv *receiverhelper.ObsReport) (*clamavHandler, error) {
+func newClamavHandler(consumer consumer.Metrics, cfg *Config, settings receiver.Settings, obsrecv *receiverhelper.ObsReport) (*clamavHandler, error) {
 	sh := &clamavHandler{
 		consumer: consumer,
 		config:   cfg,

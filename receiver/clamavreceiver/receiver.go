@@ -12,14 +12,14 @@ import (
 
 type clamavReceiver struct {
 	consumer consumer.Metrics
-	settings receiver.CreateSettings
+	settings receiver.Settings
 	cancel   context.CancelFunc
 	config   *Config
 	sh       *clamavHandler
 	obsrecv  *receiverhelper.ObsReport
 }
 
-func newClamavReceiver(config *Config, settings receiver.CreateSettings, consumer consumer.Metrics) (*clamavReceiver, error) {
+func newClamavReceiver(config *Config, settings receiver.Settings, consumer consumer.Metrics) (*clamavReceiver, error) {
 	obsrecv, err := receiverhelper.NewObsReport(receiverhelper.ObsReportSettings{
 		ReceiverID:             settings.ID,
 		Transport:              "event",
