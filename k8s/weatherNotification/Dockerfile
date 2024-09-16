@@ -1,10 +1,10 @@
 # weather-notification:latest
-FROM debian:bookworm-slim as clone
+FROM debian:bookworm-slim AS clone
 RUN apt-get update -y && apt-get install --no-install-recommends -y git ca-certificates
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/weather-notification.git --depth 1
 
-FROM golang:1.22-bookworm as build
+FROM golang:1.22-bookworm AS build
 COPY --from=clone /app/weather-notification /app/weather-notification
 WORKDIR /app/weather-notification
 RUN go mod tidy && go build
