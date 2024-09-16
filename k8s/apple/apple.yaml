@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: apple
+  namespace: tasks
+spec:
+  schedule: "37 6 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          containers:
+            - name: apple
+              image: localhost:5000/apple:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  npm install
+                  npm run job
+                  export FILE_PATH=/app/apple/output.txt
+                  /app/slackPublisher
+              env:
+                - name: SLACK_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_BOT_TOKEN
+                - name: SLACK_CHANNEL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: common-secrets
+                      key: SLACK_CHANNEL_ID
+          restartPolicy: Never
