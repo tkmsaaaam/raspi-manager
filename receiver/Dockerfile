@@ -1,5 +1,5 @@
 # clamavreceiver:latest
-FROM golang:1.22-bookworm AS builder
+FROM golang:1.23-bookworm AS builder
 WORKDIR /app
 RUN git clone https://github.com/open-telemetry/opentelemetry-collector.git --depth=1 && git clone https://github.com/tkmsaaaam/raspi-manager.git --depth=1
 WORKDIR /app/opentelemetry-collector/cmd/mdatagen

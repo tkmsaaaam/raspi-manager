@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y git ca-certi
 RUN git clone https://github.com/tkmsaaaam/browser-operator.git --depth 1
 WORKDIR /app/browser-operator/unitedcinemas
 
-FROM golang:1.22-bookworm AS build-publisher
+FROM golang:1.23-bookworm AS build-publisher
 ENV GOHOSTARCH=arm GOHOSTOS=linux GOARCH=arm GOOS=linux
 RUN sed -i 's@deb.debian.org/debian-security@ftp.riken.jp/Linux/debian/debian-security@g' /etc/apt/sources.list.d/debian.sources && sed -i 's@deb.debian.org/debian@ftp.jp.debian.org/debian@g' /etc/apt/sources.list.d/debian.sources
 RUN apt-get update -y  && apt-get install --no-install-recommends -y git ca-certificates &&  apt-get clean && rm -rf /var/lib/apt/lists/*

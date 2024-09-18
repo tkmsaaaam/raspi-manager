@@ -1,5 +1,5 @@
 # check-login:latest
-FROM golang:1.22-bookworm AS build
+FROM golang:1.23-bookworm AS build
 ENV GOHOSTARCH=arm GOHOSTOS=linux GOARCH=arm GOOS=linux
 RUN apt-get update -y  && apt-get install --no-install-recommends -y git &&  apt-get clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /work
