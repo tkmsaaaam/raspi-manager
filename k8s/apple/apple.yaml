@@ -4,6 +4,7 @@ metadata:
   name: apple
   namespace: tasks
 spec:
+  suspend: true
   schedule: "37 6 * * *"
   successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
