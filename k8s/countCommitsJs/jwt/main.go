@@ -11,6 +11,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type Request struct {
+	Repositories []string `json:"repositories"`
+}
+
 type Response struct {
 	Token               string
 	ExpiresAt           time.Time
@@ -28,20 +32,36 @@ func main() {
 	if appId == "" || installId == "" {
 		return
 	}
+
+	var d = time.Minute * 10
+	if durationStr := os.Getenv("DURATION"); durationStr != "" {
+		duration, e := time.ParseDuration(durationStr)
+		if e == nil {
+			d = duration
+		}
+	}
+
+	now := time.Now()
 	claims := jwt.MapClaims{
-		"iat": time.Now().Unix(),
-		"exp": time.Now().Add(time.Minute * 10).Unix(),
+		"iat": now.Unix(),
+		"exp": now.Add(d).Unix(),
 		"iss": appId,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
-	keyRow, _ := os.ReadFile("private-key.pem")
+	var keyFile = "private-key.pem"
+	if path := os.Getenv("KEY_FILE_PATH"); path != "" {
+		keyFile = path
+	}
+
+	keyRow, _ := os.ReadFile(keyFile)
 	key, _ := jwt.ParseRSAPrivateKeyFromPEM(keyRow)
 	tokenString, err := token.SignedString(key)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	url := "https://api.github.com/app/installations/" + installId + "/access_tokens"
 	req, _ := http.NewRequest("POST", url, nil)
 	req.Header.Set("Authorization", "Bearer "+tokenString)
@@ -53,6 +73,15 @@ func main() {
 	jsonErr := json.Unmarshal(body, response)
 	if err != nil {
 		fmt.Println(jsonErr)
+	}
+	if output := os.Getenv("OUTPUT"); output == "true" {
+		f, err := os.Create("result.json")
+		if err == nil {
+			body, e := json.Marshal(response)
+			if e == nil {
+				f.Write(body)
+			}
+		}
 	}
 	fmt.Println(response.Token)
 }
