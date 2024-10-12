@@ -13,13 +13,13 @@ import (
 
 type Response struct {
 	Token               string
-	expiresAt           time.Time
-	permissions         Permissions
-	repositorySelection string
+	ExpiresAt           time.Time
+	Permissions         Permissions
+	RepositorySelection string
 }
 
 type Permissions struct {
-	metadata string
+	Metadata string
 }
 
 func main() {
