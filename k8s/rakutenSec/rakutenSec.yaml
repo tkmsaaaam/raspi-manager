@@ -44,4 +44,8 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: SLACK_CHANNEL_ID
+              resources:
+                limits:
+                  cpu: 200m
+                  memory: 1024Mi
           restartPolicy: Never
