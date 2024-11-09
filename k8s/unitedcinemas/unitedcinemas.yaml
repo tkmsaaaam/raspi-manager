@@ -19,9 +19,13 @@ spec:
                 - /bin/sh
                 - -c
                 - |
-                  npm install
-                  npm run job
-                  export FILE_PATH=/app/unitedcinemas/output.txt
+                  LOG=`npm install && npm run job`
+                  if [ -e $FILE ]; then
+                    export FILE_PATH=$FILE
+                  else
+                    export MESSAGE=$LOG
+                  fi
+                  echo $LOG
                   /app/slackPublisher
               env:
                 - name: SLACK_TOKEN
@@ -39,4 +43,6 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: THEATER
+                - name: FILE
+                  value: /app/unitedcinemas/output.txt
           restartPolicy: Never

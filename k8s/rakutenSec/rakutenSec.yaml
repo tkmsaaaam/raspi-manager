@@ -19,9 +19,13 @@ spec:
                 - /bin/sh
                 - -c
                 - |
-                  npm install
-                  npm run job
-                  export FILE_PATH=/app/rakuten-sec/output.txt
+                  LOG=`npm install && npm run job`
+                  if [ -e $FILE ]; then
+                    export FILE_PATH=$FILE
+                  else
+                    export MESSAGE=$LOG
+                  fi
+                  echo $LOG
                   /app/slackPublisher
               env:
                 - name: USERNAME
@@ -44,6 +48,8 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: SLACK_CHANNEL_ID
+                - name: FILE
+                  value: /app/rakuten-sec/output.txt
               resources:
                 limits:
                   cpu: 200m

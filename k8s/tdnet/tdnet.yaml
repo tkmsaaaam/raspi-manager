@@ -19,9 +19,13 @@ spec:
                 - /bin/sh
                 - -c
                 - |
-                  npm install
-                  npm run job
-                  export FILE_PATH=/app/tdnet/output.txt
+                  LOG=`npm install && npm run job`
+                  if [ -e $FILE ]; then
+                    export FILE_PATH=$FILE
+                  else
+                    export MESSAGE=$LOG
+                  fi
+                  echo $LOG
                   /app/slackPublisher
               volumeMounts:
                 - mountPath: /app/tdnet/favorite.txt
@@ -41,6 +45,8 @@ spec:
                   value: /app/tdnet/favorite.txt
                 - name: FILE_OUTPUT
                   value: "true"
+                - name: FILE
+                  value: /app/tdnet/output.txt
           volumes:
             - name: favoritelist
               hostPath:
