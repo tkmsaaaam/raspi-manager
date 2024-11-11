@@ -52,6 +52,6 @@ spec:
                   value: /app/rakuten-sec/output.txt
               resources:
                 limits:
-                  cpu: 200m
+                  cpu: 800m
                   memory: 1024Mi
           restartPolicy: Never
