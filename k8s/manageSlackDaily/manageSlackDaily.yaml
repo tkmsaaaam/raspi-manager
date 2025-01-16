@@ -35,4 +35,6 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: SLACK_USER_TOKEN
+                - name: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+                  value: http://pushgateway-svc.otel.svc.cluster.local:9091
           restartPolicy: Never

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgateway
+  labels:
+    app: pushgateway
+  namespace: otel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pushgateway
+  template:
+    metadata:
+      labels:
+        app: pushgateway
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      nodeSelector:
+        kubernetes.io/hostname: raspberrypi
+      containers:
+        - name: pushgateway
+          image: prom/pushgateway
+          ports:
+            - containerPort: 9091
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pushgateway-svc
+  labels:
+    run: pushgateway-svc
+  namespace: otel
+spec:
+  ports:
+    - port: 9091
+      protocol: TCP
+  selector:
+    app: pushgateway
