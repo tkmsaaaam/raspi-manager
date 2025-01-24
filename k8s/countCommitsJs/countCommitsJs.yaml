@@ -20,6 +20,7 @@ spec:
                 - -c
                 - |
                   echo "$PRIVATE_KEY" > /private-key.pem
+                  export GH_TOKEN=`/app/jwt`
                   /app/count-commits-js
               env:
                 - name: INSTALL_ID
@@ -52,6 +53,4 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: SLACK_CHANNEL_ID
-                - name: GH_TOKEN
-                  value: /app/jwt
           restartPolicy: Never
