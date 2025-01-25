@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -29,7 +30,12 @@ type Permissions struct {
 func main() {
 	appId := os.Getenv("APP_ID")
 	installId := os.Getenv("INSTALL_ID")
-	if appId == "" || installId == "" {
+	if appId == "" {
+		log.Println("APP_ID is required")
+		return
+	}
+	if installId == "" {
+		log.Println("INSTALL_ID is required")
 		return
 	}
 
@@ -59,7 +65,8 @@ func main() {
 	key, _ := jwt.ParseRSAPrivateKeyFromPEM(keyRow)
 	tokenString, err := token.SignedString(key)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		return
 	}
 
 	url := "https://api.github.com/app/installations/" + installId + "/access_tokens"
@@ -72,9 +79,10 @@ func main() {
 	response := &Response{}
 	jsonErr := json.Unmarshal(body, response)
 	if err != nil {
-		fmt.Println(jsonErr)
+		log.Println(jsonErr)
+		return
 	}
-	if output := os.Getenv("OUTPUT"); output == "true" {
+	if output := os.Getenv("OUTPUT_TO_FILE"); output == "true" {
 		f, err := os.Create("result.json")
 		if err == nil {
 			body, e := json.Marshal(response)
