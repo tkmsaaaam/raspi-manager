@@ -7,7 +7,7 @@ RUN git clone https://github.com/tkmsaaaam/manage-slack.git --depth 1
 FROM golang:1.23-bookworm AS build
 COPY --from=clone /app/manage-slack /app/manage-slack
 WORKDIR /app/manage-slack/remover
-RUN go build main.go
+RUN go mod tidy && go build main.go
 
 FROM debian:bookworm-slim
 RUN apt-get update -y && apt-get install --no-install-recommends -y ca-certificates
