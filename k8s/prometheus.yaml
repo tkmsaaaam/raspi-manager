@@ -25,7 +25,7 @@ spec:
             type: Directory
       containers:
         - name: prometheus
-          image: prom/prometheus
+          image: prom/prometheus:latest
           ports:
             - containerPort: 9090
           volumeMounts:

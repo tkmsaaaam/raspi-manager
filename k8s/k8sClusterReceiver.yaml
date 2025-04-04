@@ -129,7 +129,7 @@ spec:
       serviceAccountName: k8s-cluster-receiver
       containers:
         - name: k8s-cluster-receiver
-          image: otel/opentelemetry-collector-contrib
+          image: otel/opentelemetry-collector-contrib:latest
           args: ["--config", "/etc/config/config.yaml"]
           volumeMounts:
             - name: config

@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: raspberrypi
       containers:
         - name: pushgateway
-          image: prom/pushgateway
+          image: prom/pushgateway:latest
           ports:
             - containerPort: 9091
           resources:

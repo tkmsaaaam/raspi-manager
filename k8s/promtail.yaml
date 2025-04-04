@@ -31,7 +31,7 @@ spec:
             type: File
       containers:
         - name: promtail
-          image: grafana/promtail
+          image: grafana/promtail:latest
           volumeMounts:
             - name: logs
               mountPath: /var/log
