@@ -19,7 +19,7 @@ data:
       pipelines:
         metrics:
           receivers: [k8s_cluster]
-          exporters: [ prometheus ]
+          exporters: [prometheus]
         logs:
           receivers: [k8s_cluster]
           exporters: [loki]

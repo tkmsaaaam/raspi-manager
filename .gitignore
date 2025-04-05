@@ -1,3 +1,4 @@
 **.pem
 alertmanager.yml
 dotnet-tools.json
+tmp
