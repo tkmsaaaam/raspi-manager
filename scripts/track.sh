@@ -2,4 +2,4 @@
 cd $(dirname $0)
 cd ..
 git pull
-kubectl apply -f k8s
+kubectl apply -f k8s -R
