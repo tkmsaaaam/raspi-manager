@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 cd ..
-$rootdir=`pwd`
+rootdir=`pwd`
 
 # Set up Nginx configuration
 sudo rm -rf /etc/nginx/conf.d
