@@ -46,14 +46,7 @@ scrape_configs:
   - job_name: k8s-cluster-receiver
     static_configs:
       - targets:
-          - k8s-cluster-receiver-svc.default.svc.cluster.local:8888
           - k8s-cluster-receiver-svc.default.svc.cluster.local:8889
-  - job_name: clamavreceiver
-    scrape_interval: 1h
-    metrics_path: '/metrics'
-    static_configs:
-      - targets:
-          - clamav-svc:1234
   - job_name: pushgateway
     static_configs:
       - targets:
