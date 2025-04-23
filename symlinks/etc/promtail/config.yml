@@ -27,7 +27,7 @@ scrape_configs:
       labels:
         job: "journal"
     relabel_configs:
-      - source_labels: [__journal_systemd_unit]
+      - source_labels: ['__journal_systemd_unit']
         regex: ^session-\d+.scope$
         action: drop
       - source_labels: ['__journal__hostname']
