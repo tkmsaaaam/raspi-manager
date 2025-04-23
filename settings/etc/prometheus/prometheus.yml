@@ -1,41 +1,15 @@
 # /etc/prometheus/prometheus.yml
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 global:
   scrape_interval: 15s
-  scrape_timeout: 10s
-  scrape_protocols:
-    - OpenMetricsText1.0.0
-    - OpenMetricsText0.0.1
-    - PrometheusText0.0.4
   evaluation_interval: 15s
-alerting:
-  alertmanagers:
-    - follow_redirects: true
-      enable_http2: true
-      scheme: http
-      timeout: 10s
-      api_version: v2
-      static_configs:
-        - targets:
-            - alertmanager-svc:9093
 scrape_configs:
   - job_name: prometheus
-    honor_timestamps: true
-    track_timestamps_staleness: false
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    scrape_protocols:
-      - OpenMetricsText1.0.0
-      - OpenMetricsText0.0.1
-      - PrometheusText0.0.4
     metrics_path: /metrics
-    scheme: http
-    enable_compression: true
-    follow_redirects: true
-    enable_http2: true
     static_configs:
       - targets:
           - localhost:9090
-  - job_name: node
+  - job_name: node-exporter
     static_configs:
       - targets:
           - node-exporter-svc:9100
