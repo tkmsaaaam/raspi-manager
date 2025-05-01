@@ -21,16 +21,23 @@ scrape_configs:
         labels:
           job: messages
           __path__: /var/log/messages
-  - job_name: journal
+  - job_name: journal # https://grafana.com/docs/loki/latest/send-data/promtail/configuration/#journal
     journal:
       path: /var/log/journal
       labels:
         job: "journal"
-    relabel_configs:
-      - source_labels: ['__journal_systemd_unit']
-        regex: ^session-\d+.scope$
-        action: drop
+      relabel_configs:
       - source_labels: ['__journal__hostname']
-        target_label: 'host'
+        target_label: host
       - source_labels: ['__journal__systemd_unit']
-        target_label: 'unit'
+        target_label: systemd_unit
+        regex: '(.+)'
+      - source_labels: ['__journal__systemd_user_unit']
+        target_label: systemd_user_unit
+        regex: '(.+)'
+      - source_labels: ['__journal__transport']
+        target_label: transport
+        regex: '(.+)'
+      - source_labels: ['__journal_priority_keyword']
+        target_label: severity
+        regex: '(.+)'
