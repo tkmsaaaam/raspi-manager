@@ -27,17 +27,17 @@ scrape_configs:
       labels:
         job: "journal"
       relabel_configs:
-      - source_labels: ['__journal__hostname']
-        target_label: host
-      - source_labels: ['__journal__systemd_unit']
-        target_label: systemd_unit
-        regex: '(.+)'
-      - source_labels: ['__journal__systemd_user_unit']
-        target_label: systemd_user_unit
-        regex: '(.+)'
-      - source_labels: ['__journal__transport']
-        target_label: transport
-        regex: '(.+)'
-      - source_labels: ['__journal_priority_keyword']
-        target_label: severity
-        regex: '(.+)'
+        - source_labels: ['__journal__hostname']
+          target_label: host
+        - source_labels: ['__journal__systemd_unit']
+          target_label: systemd_unit
+          regex: '(.+)'
+        - source_labels: ['__journal__systemd_user_unit']
+          target_label: systemd_user_unit
+          regex: '(.+)'
+        - source_labels: ['__journal__transport']
+          target_label: transport
+          regex: '(.+)'
+        - source_labels: ['__journal_priority_keyword']
+          target_label: severity
+          regex: '(.+)'
