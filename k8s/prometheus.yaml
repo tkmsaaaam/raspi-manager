@@ -19,9 +19,13 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       volumes:
-        - name: prometheus
+        - name: prometheus-config
           hostPath:
             path: /etc/prometheus
+            type: Directory
+        - name: prometheus-data
+          hostPath:
+            path: /prometheus
             type: Directory
       containers:
         - name: prometheus
@@ -30,7 +34,9 @@ spec:
             - containerPort: 9090
           volumeMounts:
             - mountPath: /etc/prometheus
-              name: prometheus
+              name: prometheus-config
+            - mountPath: /prometheus
+              name: prometheus-data
           resources:
             limits:
               cpu: 100m
