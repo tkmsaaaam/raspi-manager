@@ -38,6 +38,9 @@ spec:
             - mountPath: /prometheus
               name: prometheus-data
           resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
             limits:
               cpu: 100m
               memory: 256Mi
