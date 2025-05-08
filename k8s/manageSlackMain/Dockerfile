@@ -4,7 +4,7 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y git ca-certi
 WORKDIR /app
 RUN git clone https://github.com/tkmsaaaam/manage-slack.git --depth 1
 
-FROM golang:1.23-bookworm AS build
+FROM golang:1.24-bookworm AS build
 COPY --from=clone /app/manage-slack /app/manage-slack
 WORKDIR /app/manage-slack/remover
 RUN go mod tidy && go build main.go
