@@ -124,7 +124,7 @@ spec:
       serviceAccountName: k8s-events-receiver
       containers:
         - name: k8s-events-receiver
-          image: otel/opentelemetry-collector-contrib:latest
+          image: docker.io/otel/opentelemetry-collector-contrib:latest
           args: ["--config", "/etc/config/config.yaml"]
           volumeMounts:
             - name: config

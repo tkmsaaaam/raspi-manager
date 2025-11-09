@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: raspberrypi
       containers:
         - name: docker-registry
-          image: registry:latest
+          image: docker.io/library/registry:latest
           ports:
             - containerPort: 5000
           volumeMounts:
