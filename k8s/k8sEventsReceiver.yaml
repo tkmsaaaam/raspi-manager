@@ -11,13 +11,13 @@ data:
       k8s_events:
         namespaces: [default, otel, tasks]
     exporters:
-      loki:
-        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/loki/api/v1/push"
+      otlphttp:
+        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp"
     service:
       pipelines:
         logs:
           receivers: [k8s_events]
-          exporters: [loki]
+          exporters: [otlphttp]
 ---
 apiVersion: v1
 kind: ServiceAccount
