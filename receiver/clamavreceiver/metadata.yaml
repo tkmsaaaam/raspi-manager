@@ -11,8 +11,8 @@ attributes:
     description: "The hostname"
     type: string
 metrics:
-  clamav.infected.count:
-    description: "The number of files were infected"
+  clamav.errors.count:
+    description: "The number of errors"
     sum:
       monotonic: true
       aggregation_temporality: cumulative
@@ -20,8 +20,8 @@ metrics:
     enabled: true
     unit: "1"
     attributes: [host]
-  clamav.errors.count:
-    description: "The number of errors"
+  clamav.infected.count:
+    description: "The number of files were infected"
     sum:
       monotonic: true
       aggregation_temporality: cumulative
