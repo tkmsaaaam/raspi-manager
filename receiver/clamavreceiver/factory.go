@@ -2,6 +2,7 @@ package clamavreceiver
 
 import (
 	"context"
+	"errors"
 
 	"github.com/tkmsaaaam/raspi-manager/receiver/clamavreceiver/internal/metadata"
 	"go.opentelemetry.io/collector/component"
@@ -24,7 +25,7 @@ func createMetricsReceiver(
 	consumer consumer.Metrics,
 ) (receiver.Metrics, error) {
 	if consumer == nil {
-		return nil, component.ErrDataTypeIsNotSupported
+		return nil, errors.New("nil consumer")
 	}
 
 	c := cfg.(*Config)
