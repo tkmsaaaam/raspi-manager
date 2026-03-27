@@ -7,7 +7,7 @@ RUN go install .
 WORKDIR /app/raspi-manager/receiver/clamavreceiver
 RUN mdatagen metadata.yaml && go generate -v ./...
 WORKDIR /app/raspi-manager/receiver
-RUN go install go.opentelemetry.io/collector/cmd/builder@v0.107.0 && builder --config=otelcol-builder.yaml
+RUN go install go.opentelemetry.io/collector/cmd/builder@v0.148.0 && builder --config=otelcol-builder.yaml
 
 FROM debian:trixie-slim
 WORKDIR /app
