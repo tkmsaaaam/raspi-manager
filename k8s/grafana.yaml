@@ -24,7 +24,7 @@ spec:
             claimName: grafana-pvc
       containers:
         - name: grafana
-          image: docker.io/grafana/grafana:main # linux/arm/v7
+          image: docker.io/grafana/grafana:13.1 # https://github.com/grafana/grafana/releases https://hub.docker.com/r/grafana/grafana
           ports:
             - containerPort: 3000
           volumeMounts:

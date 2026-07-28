@@ -7,7 +7,7 @@ RUN git clone https://github.com/tkmsaaaam/manage-slack.git --depth 1
 FROM golang:1.26-trixie AS build
 COPY --from=clone /app/manage-slack /app/manage-slack
 WORKDIR /app/manage-slack/summary
-RUN go build main.go
+RUN go install go.opentelemetry.io/otelc/tool/cmd/otelc@latest && go mod tidy && otelc go build main.go
 
 FROM debian:trixie-slim
 RUN apt-get update -y && apt-get install --no-install-recommends -y ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*

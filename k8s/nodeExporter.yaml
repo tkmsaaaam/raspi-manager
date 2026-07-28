@@ -20,7 +20,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: node-exporter
-          image: docker.io/prom/node-exporter:latest
+          image: docker.io/prom/node-exporter:v1.12.1 # https://hub.docker.com/r/prom/node-exporter
           ports:
             - containerPort: 9100
           resources:

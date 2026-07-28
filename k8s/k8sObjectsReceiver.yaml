@@ -88,7 +88,7 @@ spec:
       serviceAccountName: k8s-objects-receiver
       containers:
         - name: k8s-objects-receiver
-          image: docker.io/otel/opentelemetry-collector-contrib:latest
+          image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
           args: ["--config", "/etc/config/config.yaml"]
           volumeMounts:
             - name: config

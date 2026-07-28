@@ -1,3 +1,4 @@
+.otelc-build
 **.pem
 alertmanager.yml
 dotnet-tools.json

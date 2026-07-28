@@ -22,7 +22,7 @@ spec:
         kubernetes.io/hostname: raspberrypi
       containers:
         - name: pushgateway
-          image: docker.io/prom/pushgateway:latest
+          image: docker.io/prom/pushgateway:v1.11.3 # https://github.com/prometheus/pushgateway/releases https://hub.docker.com/r/prom/pushgateway
           ports:
             - containerPort: 9091
           resources:

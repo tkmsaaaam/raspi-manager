@@ -1,4 +1,4 @@
-#  yaml-language-server: $schema=https://raw.githubusercontent.com/Arthur1/otelcol-metadata-schema/main/metadata.schema.json
+#  yaml-language-server: $schema=https://raw.githubusercontent.com/tkmsaaaam/otelcol-metadata-schema/track/c985f1fdadebc96565ce252da857ad6fd34c28b0/metadata.schema.json
 type: clamav
 status:
   class: receiver

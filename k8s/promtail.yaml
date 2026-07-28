@@ -31,7 +31,7 @@ spec:
             type: File
       containers:
         - name: promtail
-          image: docker.io/grafana/promtail:latest
+          image: docker.io/grafana/promtail:3.6.11 # https://hub.docker.com/r/grafana/promtail
           volumeMounts:
             - name: logs
               mountPath: /var/log

@@ -7,12 +7,12 @@ RUN git clone https://github.com/tkmsaaaam/raspi-manager.git --depth 1 && git cl
 FROM golang:1.26-trixie AS build-main
 COPY --from=clone /app/count-commits-js /app/count-commits-js
 WORKDIR /app/count-commits-js
-RUN go mod tidy && go build
+RUN go install go.opentelemetry.io/otelc/tool/cmd/otelc@latest && go mod tidy && otelc go build
 
 FROM golang:1.26-trixie AS build-jwt
 COPY --from=clone /app/raspi-manager/k8s/countCommitsJs/jwt /app/jwt
 WORKDIR /app/jwt
-RUN go mod tidy && go build
+RUN go install go.opentelemetry.io/otelc/tool/cmd/otelc@latest && go mod tidy && otelc go build
 
 FROM debian:trixie-slim
 COPY --from=build-jwt /app/jwt/jwt /app/jwt

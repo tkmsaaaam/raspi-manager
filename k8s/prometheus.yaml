@@ -29,7 +29,7 @@ spec:
             type: Directory
       containers:
         - name: prometheus
-          image: docker.io/prom/prometheus:latest
+          image: docker.io/prom/prometheus:v3.13.1 # https://github.com/prometheus/prometheus/releases https://hub.docker.com/r/prom/prometheus
           ports:
             - containerPort: 9090
           volumeMounts:
