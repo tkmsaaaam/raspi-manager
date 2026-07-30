@@ -16,7 +16,7 @@ data:
             mode: watch
     exporters:
       otlphttp:
-        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp"
+        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs"
     service:
       pipelines:
         logs:
@@ -38,7 +38,7 @@ metadata:
     app: k8s-objects-receiver
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - events
       - pods
@@ -47,7 +47,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - "events.k8s.io"
+      - 'events.k8s.io'
     resources:
       - events
     verbs:
@@ -89,7 +89,7 @@ spec:
       containers:
         - name: k8s-objects-receiver
           image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
-          args: ["--config", "/etc/config/config.yaml"]
+          args: ['--config', '/etc/config/config.yaml']
           volumeMounts:
             - name: config
               mountPath: /etc/config

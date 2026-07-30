@@ -4,7 +4,7 @@ metadata:
   name: manage-slack-daily
   namespace: tasks
 spec:
-  schedule: "21 21 * * *"
+  schedule: '21 21 * * *'
   successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 2
   jobTemplate:
@@ -38,5 +38,5 @@ spec:
                 - name: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
                   value: http://pushgateway-svc.otel.svc.cluster.local:9091
                 - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-                  value: http://loki-svc.otel.svc.cluster.local:3100/otlp
+                  value: http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs
           restartPolicy: Never

@@ -12,7 +12,7 @@ data:
         collection_interval: 10s
     exporters:
       otlphttp:
-        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp"
+        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs"
       prometheus:
         endpoint: "0.0.0.0:8889"
     service:
@@ -39,7 +39,7 @@ metadata:
     app: k8s-cluster-receiver
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - events
       - namespaces
@@ -130,7 +130,7 @@ spec:
       containers:
         - name: k8s-cluster-receiver
           image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
-          args: ["--config", "/etc/config/config.yaml"]
+          args: ['--config', '/etc/config/config.yaml']
           volumeMounts:
             - name: config
               mountPath: /etc/config
