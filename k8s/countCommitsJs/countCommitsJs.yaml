@@ -20,7 +20,7 @@ spec:
                 - -c
                 - |
                   echo "$PRIVATE_KEY" > /private-key.pem
-                  export GH_TOKEN=`/app/jwt`
+                  export GH_TOKEN=$(/app/jwt | tail -n 1)
                   /app/count-commits-js
               env:
                 - name: INSTALL_ID
