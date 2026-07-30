@@ -37,4 +37,6 @@ spec:
                       key: SLACK_CHANNEL_ID
                 - name: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
                   value: http://pushgateway-svc.otel.svc.cluster.local:9091
+                - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+                  value: http://loki-svc.otel.svc.cluster.local:3100/otlp
           restartPolicy: Never
