@@ -39,4 +39,6 @@ spec:
                   value: http://pushgateway-svc.otel.svc.cluster.local:9091
                 - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
                   value: http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs
+                - name: OTEL_SERVICE_NAME
+                  value: weather-notification
           restartPolicy: Never
