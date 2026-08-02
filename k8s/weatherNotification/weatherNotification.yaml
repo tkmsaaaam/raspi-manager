@@ -36,9 +36,11 @@ spec:
                       name: common-secrets
                       key: SLACK_CHANNEL_ID
                 - name: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
-                  value: http://pushgateway-svc.otel.svc.cluster.local:9091
+                  value: http://victoriametrics-svc:8428/opentelemetry/v1/metrics
                 - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-                  value: http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs
+                  value: http://victorialogs-svc:9428/insert/opentelemetry/v1/logs
+                - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+                  value: http://victoriatraces-svc:10428/insert/opentelemetry/v1/traces
                 - name: OTEL_SERVICE_NAME
                   value: weather-notification
           restartPolicy: Never

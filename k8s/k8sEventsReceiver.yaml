@@ -12,7 +12,7 @@ data:
         namespaces: [default, otel, tasks]
     exporters:
       otlphttp:
-        endpoint: "http://loki-svc.otel.svc.cluster.local:3100/otlp/v1/logs"
+        endpoint: "http://victorialogs-svc:9428/insert/opentelemetry/v1/logs"
     service:
       pipelines:
         logs:

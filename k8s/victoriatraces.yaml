@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loki
+  name: victoriatraces
   labels:
-    app: loki
+    app: victoriatraces
   namespace: otel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loki
+      app: victoriatraces
   template:
     metadata:
       labels:
-        app: loki
+        app: victoriatraces
     spec:
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       containers:
-        - name: loki
-          image: docker.io/grafana/loki:3.7.4 # https://github.com/grafana/loki/releases https://hub.docker.com/r/grafana/loki
+        - name: victoriatraces
+          image: docker.io/victoriametrics/victoria-traces:v0.10.0 # https://github.com/VictoriaMetrics/victoriaTraces/releases https://hub.docker.com/r/victoriametrics/victoria-traces
           ports:
-            - containerPort: 3100
+            - containerPort: 10428
           resources:
             requests:
               cpu: 25m
@@ -34,13 +34,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: loki-svc
+  name: victoriatraces-svc
   labels:
-    run: loki-svc
+    run: victoriatraces-svc
   namespace: otel
 spec:
   ports:
-    - port: 3100
+    - port: 10428
       protocol: TCP
   selector:
-    app: loki
+    app: victoriatraces
+# TODO: persistent volume

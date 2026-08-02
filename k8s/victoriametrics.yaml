@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victoriametrics
+  labels:
+    app: victoriametrics
+  namespace: otel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: victoriametrics
+  template:
+    metadata:
+      labels:
+        app: victoriametrics
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+        - name: victoriametrics
+          image: docker.io/victoriametrics/victoria-metrics:v1.148.0 # https://github.com/VictoriaMetrics/victoriaMetrics/releases https://hub.docker.com/r/victoriametrics/victoria-metrics
+          ports:
+            - containerPort: 8428
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: victoriametrics-svc
+  labels:
+    run: victoriametrics-svc
+  namespace: otel
+spec:
+  ports:
+    - port: 8428
+      protocol: TCP
+  selector:
+    app: victoriametrics
+# TODO: persistent volume
