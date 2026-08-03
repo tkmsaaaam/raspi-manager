@@ -11,18 +11,18 @@ data:
       k8s_cluster:
         collection_interval: 10s
     exporters:
-      otlphttp:
+      otlphttp/metrics:
+        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
+      otlphttp/logs:
         endpoint: "http://victorialogs-svc:9428/insert/opentelemetry/v1/logs"
-      prometheus:
-        endpoint: "0.0.0.0:8889"
     service:
       pipelines:
         metrics:
           receivers: [k8s_cluster]
-          exporters: [prometheus]
+          exporters: [otlphttp/metrics]
         logs:
           receivers: [k8s_cluster]
-          exporters: [otlphttp]
+          exporters: [otlphttp/logs]
 ---
 apiVersion: v1
 kind: ServiceAccount

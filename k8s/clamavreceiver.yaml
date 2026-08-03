@@ -70,10 +70,10 @@ data:
     receivers:
       clamav:
     exporters:
-      prometheus:
-        endpoint: "0.0.0.0:1234"
+      otlphttp/metrics:
+        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
     service:
       pipelines:
         metrics:
           receivers: [clamav]
-          exporters: [prometheus]
+          exporters: [otlphttp/metrics]

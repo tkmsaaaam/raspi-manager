@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-stats-receiver
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-stats-receiver
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes/stats
+      - nodes/proxy
+      - nodes
+      - pods
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-stats-receiver
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-stats-receiver
+subjects:
+  - kind: ServiceAccount
+    name: k8s-stats-receiver
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-stats-receiver
+data:
+  collector.yaml: |
+    receivers:
+      kubeletstats:
+        collection_interval: 20s
+        auth_type: serviceAccount
+        endpoint: http://raspberrypi:10250
+        insecure_skip_verify: true
+        metric_groups:
+          - node
+          - pod
+          - container
+        extra_metadata_labels:
+          - container.id
+    processors:
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 512
+      batch:
+      k8sattributes:
+        auth_type: serviceAccount
+    exporters:
+      otlphttp/metrics:
+        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
+    service:
+      pipelines:
+        metrics:
+          receivers:
+            - kubeletstats
+          processors:
+            - memory_limiter
+            - k8sattributes
+            - batch
+          exporters:
+            - otlphttp/metrics
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: k8s-stats-receiver
+spec:
+  selector:
+    matchLabels:
+      app: k8s-stats-receiver
+  template:
+    metadata:
+      labels:
+        app: k8s-stats-receiver
+    spec:
+      serviceAccountName: k8s-stats-receiver
+      containers:
+        - name: k8s-stats-receiver
+          image: otel/opentelemetry-collector-contrib:latest
+          args:
+            - --config=/conf/collector.yaml
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          configMap:
+            name: k8s-stats-receiver
