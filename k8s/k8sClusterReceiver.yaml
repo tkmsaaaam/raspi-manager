@@ -1,4 +1,4 @@
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/1d12566c29f8192bfaaabb72c3f2eca8df613a87/receiver/k8sclusterreceiver/README.md
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.157.0/receiver/k8sclusterreceiver/README.md
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,9 +12,9 @@ data:
         collection_interval: 10s
     exporters:
       otlphttp/metrics:
-        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
+        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/"
       otlphttp/logs:
-        endpoint: "http://victorialogs-svc:9428/insert/opentelemetry/v1/logs"
+        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
     service:
       pipelines:
         metrics:
@@ -39,19 +39,29 @@ metadata:
     app: k8s-cluster-receiver
 rules:
   - apiGroups:
-      - ''
+      - ""
     resources:
       - events
       - namespaces
       - namespaces/status
       - nodes
       - nodes/spec
+      - persistentvolumes
+      - persistentvolumeclaims
       - pods
       - pods/status
       - replicationcontrollers
       - replicationcontrollers/status
       - resourcequotas
       - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
     verbs:
       - get
       - list
@@ -93,7 +103,7 @@ rules:
     verbs:
       - get
       - list
-      - watch
+      - watch`
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -163,3 +173,4 @@ spec:
       protocol: TCP
   selector:
     app: k8s-cluster-receiver
+# fix

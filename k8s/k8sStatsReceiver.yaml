@@ -1,3 +1,4 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/v0.157.0/receiver/kubeletstatsreceiver/README.md
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -27,6 +28,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: k8s-stats-receiver
+    namespace: default
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -38,7 +40,7 @@ data:
       kubeletstats:
         collection_interval: 20s
         auth_type: serviceAccount
-        endpoint: http://raspberrypi:10250
+        endpoint: ${env:K8S_NODE_IP}:10250
         insecure_skip_verify: true
         metric_groups:
           - node
@@ -92,6 +94,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: K8S_NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           volumeMounts:
             - name: config
               mountPath: /conf

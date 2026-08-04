@@ -1,4 +1,4 @@
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/1d12566c29f8192bfaaabb72c3f2eca8df613a87/receiver/k8sobjectsreceiver/README.md
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.157.0/receiver/k8sobjectsreceiver/README.md
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,7 +16,7 @@ data:
             mode: watch
     exporters:
       otlphttp:
-        endpoint: "http://victorialogs-svc:9428/insert/opentelemetry/v1/logs"
+        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
     service:
       pipelines:
         logs:

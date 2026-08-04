@@ -9,7 +9,7 @@ data:
     receivers:
       filelog/container:
         include:
-          - /var/log/containers/*/*/*.log
+          - /var/log/containers/*.log
         operators:
           - type: container
       filelog/clamav:
@@ -32,16 +32,16 @@ data:
             - job_name: node
               static_configs:
                 - targets:
-                    - node-exporter-svc:9100
+                    - node-exporter-svc.otel.svc.cluster.local:9100
             - job_name: cadvisor
               static_configs:
                 - targets:
                     - cadvisor-svc.cadvisor.svc.cluster.local:8080
     exporters:
       otlphttp/metrics:
-        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
+        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/"
       otlphttp/logs:
-        endpoint: "http://victorialogs-svc:9428/insert/opentelemetry/v1/logs"
+        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
     service:
       pipelines:
         metrics:
@@ -66,21 +66,19 @@ spec:
     metadata:
       labels:
         app: otel-collector
-    volumes:
-        - name: logs
-          hostPath:
-            path: /var/log
-            type: Directory
     spec:
-      serviceAccountName: otel-collector
       containers:
         - name: otel-collector
+          securityContext:
+            runAsUser: 0
           image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
           args: ['--config', '/etc/config/config.yaml']
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: logs
               mountPath: /var/log
+            - name: config
+              mountPath: /etc/config
           resources:
             requests:
               cpu: 25m
@@ -88,3 +86,11 @@ spec:
             limits:
               cpu: 100m
               memory: 512Mi
+      volumes:
+        - name: logs
+          hostPath:
+            path: /var/log
+            type: Directory
+        - name: config
+          configMap:
+            name: otel-collector
