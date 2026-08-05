@@ -103,7 +103,7 @@ rules:
     verbs:
       - get
       - list
-      - watch`
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -116,9 +116,9 @@ roleRef:
   kind: ClusterRole
   name: k8s-cluster-receiver
 subjects:
-  - kind: ServiceAccount
-    name: k8s-cluster-receiver
-    namespace: default
+- kind: ServiceAccount
+  name: k8s-cluster-receiver
+  namespace: default
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -173,4 +173,3 @@ spec:
       protocol: TCP
   selector:
     app: k8s-cluster-receiver
-# fix
