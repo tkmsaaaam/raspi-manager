@@ -57,7 +57,7 @@ data:
         auth_type: serviceAccount
     exporters:
       otlphttp/metrics:
-        endpoint: "http://victoriametrics-svc:8428/opentelemetry/v1/metrics"
+        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/"
     service:
       pipelines:
         metrics:
@@ -83,6 +83,8 @@ spec:
       labels:
         app: k8s-stats-receiver
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       serviceAccountName: k8s-stats-receiver
       containers:
         - name: k8s-stats-receiver
