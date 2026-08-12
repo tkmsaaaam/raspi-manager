@@ -1,4 +1,4 @@
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.157.0/receiver/k8sclusterreceiver/README.md
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.158.0/receiver/k8sclusterreceiver/README.md
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -39,7 +39,7 @@ metadata:
     app: k8s-cluster-receiver
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - events
       - namespaces
@@ -116,9 +116,9 @@ roleRef:
   kind: ClusterRole
   name: k8s-cluster-receiver
 subjects:
-- kind: ServiceAccount
-  name: k8s-cluster-receiver
-  namespace: default
+  - kind: ServiceAccount
+    name: k8s-cluster-receiver
+    namespace: default
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -139,7 +139,7 @@ spec:
       serviceAccountName: k8s-cluster-receiver
       containers:
         - name: k8s-cluster-receiver
-          image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
+          image: docker.io/otel/opentelemetry-collector-contrib:0.158.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
           args: ['--config', '/etc/config/config.yaml']
           volumeMounts:
             - name: config

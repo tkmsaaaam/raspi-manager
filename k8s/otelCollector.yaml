@@ -71,7 +71,7 @@ spec:
         - name: otel-collector
           securityContext:
             runAsUser: 0
-          image: docker.io/otel/opentelemetry-collector-contrib:0.157.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
+          image: docker.io/otel/opentelemetry-collector-contrib:0.158.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
           args: ['--config', '/etc/config/config.yaml']
           imagePullPolicy: IfNotPresent
           volumeMounts:

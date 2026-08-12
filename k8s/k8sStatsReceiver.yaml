@@ -1,4 +1,4 @@
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/v0.157.0/receiver/kubeletstatsreceiver/README.md
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/v0.158.0/receiver/kubeletstatsreceiver/README.md
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -9,13 +9,13 @@ kind: ClusterRole
 metadata:
   name: k8s-stats-receiver
 rules:
-  - apiGroups: [""]
+  - apiGroups: ['']
     resources:
       - nodes/stats
       - nodes/proxy
       - nodes
       - pods
-    verbs: ["get", "list", "watch"]
+    verbs: ['get', 'list', 'watch']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
