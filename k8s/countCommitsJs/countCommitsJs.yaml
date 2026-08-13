@@ -53,12 +53,9 @@ spec:
                     secretKeyRef:
                       name: common-secrets
                       key: SLACK_CHANNEL_ID
-                - name: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
-                  value: http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/
-                - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-                  value: http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/
-                - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-                  value: http://victoriatraces-svc.otel.svc.cluster.local:10428/insert/opentelemetry/
                 - name: OTEL_SERVICE_NAME
                   value: count-commits-js
+              envFrom:
+                - configMapRef:
+                    name: otel-endpoints
           restartPolicy: Never
