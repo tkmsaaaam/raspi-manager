@@ -57,5 +57,5 @@ spec:
                   value: count-commits-js
               envFrom:
                 - configMapRef:
-                    name: otel-endpointss
+                    name: otel-endpoints
           restartPolicy: Never
