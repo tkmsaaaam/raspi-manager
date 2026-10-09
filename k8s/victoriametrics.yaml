@@ -75,6 +75,8 @@ metadata:
   namespace: otel
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: victoriametrics
@@ -91,8 +93,13 @@ spec:
         - name: victoriametrics
           image: docker.io/victoriametrics/victoria-metrics:v1.148.0 # https://github.com/VictoriaMetrics/victoriaMetrics/releases https://hub.docker.com/r/victoriametrics/victoria-metrics
           args:
+            - -storageDataPath=/storage
+            # VM has no disk-size retention limit; tune this after measuring usage.
+            - -retentionPeriod=365d
             - -promscrape.config=/etc/victoriametrics/prometheus.yaml
           volumeMounts:
+            - name: data
+              mountPath: /storage
             - name: scrape-config
               mountPath: /etc/victoriametrics
               readOnly: true
@@ -106,6 +113,9 @@ spec:
               cpu: 1000m
               memory: 1536Mi
       volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: victoriametrics-pvc
         - name: scrape-config
           configMap:
             name: victoriametrics-scrape
@@ -123,4 +133,42 @@ spec:
       protocol: TCP
   selector:
     app: victoriametrics
-# TODO: persistent volume
+---
+# Capacity is declarative; hostPath does not enforce a disk usage limit.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: victoriametrics-pv
+spec:
+  capacity:
+    storage: 2G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    type: DirectoryOrCreate
+    path: /var/lib/victoriametrics
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - raspberrypi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: victoriametrics-pvc
+  namespace: otel
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: victoriametrics-pv
+  resources:
+    requests:
+      storage: 2G

@@ -7,6 +7,8 @@ metadata:
   namespace: otel
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: victoriatraces
@@ -21,6 +23,13 @@ spec:
       containers:
         - name: victoriatraces
           image: docker.io/victoriametrics/victoria-traces:v0.10.0 # https://github.com/VictoriaMetrics/victoriaTraces/releases https://hub.docker.com/r/victoriametrics/victoria-traces
+          args:
+            - -storageDataPath=/storage
+            - -retentionPeriod=365d
+            - -retention.maxDiskSpaceUsageBytes=1GB
+          volumeMounts:
+            - name: data
+              mountPath: /storage
           ports:
             - containerPort: 10428
           resources:
@@ -30,6 +39,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 1536Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: victoriatraces-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -44,4 +57,42 @@ spec:
       protocol: TCP
   selector:
     app: victoriatraces
-# TODO: persistent volume
+---
+# Capacity is declarative; hostPath does not enforce a disk usage limit.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: victoriatraces-pv
+spec:
+  capacity:
+    storage: 2G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    type: DirectoryOrCreate
+    path: /var/lib/victoriatraces
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - raspberrypi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: victoriatraces-pvc
+  namespace: otel
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: victoriatraces-pv
+  resources:
+    requests:
+      storage: 2G
