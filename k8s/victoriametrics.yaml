@@ -1,3 +1,71 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: victoriametrics
+  namespace: otel
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: victoriametrics-scrape
+rules:
+  - apiGroups: ['']
+    resources: ['nodes']
+    verbs: ['get', 'list', 'watch']
+  - apiGroups: ['']
+    resources: ['nodes/proxy']
+    verbs: ['get']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: victoriametrics-scrape
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: victoriametrics-scrape
+subjects:
+  - kind: ServiceAccount
+    name: victoriametrics
+    namespace: otel
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: victoriametrics-scrape
+  namespace: otel
+data:
+  prometheus.yaml: |
+    global:
+      scrape_interval: 30s
+      scrape_timeout: 10s
+    scrape_configs:
+      - job_name: node
+        static_configs:
+          - targets:
+              - node-exporter-svc.otel.svc.cluster.local:9100
+      # Kubernetes 1.37 with PodAndContainerStatsFromCRI=true serves CRI
+      # pod/container metrics at /metrics/cadvisor (CRI-O >= 1.36.3 adds
+      # namespace, pod and container labels). Node metrics still use cAdvisor.
+      # https://kubernetes.io/docs/reference/instrumentation/cri-pod-container-metrics/
+      - job_name: kubelet-cri
+        scheme: https
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: instance
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: node
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,12 +83,19 @@ spec:
       labels:
         app: victoriametrics
     spec:
+      serviceAccountName: victoriametrics
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       containers:
         - name: victoriametrics
           image: docker.io/victoriametrics/victoria-metrics:v1.148.0 # https://github.com/VictoriaMetrics/victoriaMetrics/releases https://hub.docker.com/r/victoriametrics/victoria-metrics
+          args:
+            - -promscrape.config=/etc/victoriametrics/prometheus.yaml
+          volumeMounts:
+            - name: scrape-config
+              mountPath: /etc/victoriametrics
+              readOnly: true
           ports:
             - containerPort: 8428
           resources:
@@ -30,6 +105,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 1536Mi
+      volumes:
+        - name: scrape-config
+          configMap:
+            name: victoriametrics-scrape
 ---
 apiVersion: v1
 kind: Service
