@@ -11,8 +11,6 @@ sudo ufw enable
 sudo ufw deny ssh
 sudo ufw allow 22222
 sudo ufw allow 22223/tcp
-sudo ufw allow 22224/tcp
-sudo ufw allow 22225/tcp
 sudo ufw reload
 
 curl https://github.com/tkmsaaaam.keys >> ~/.ssh/authorized_keys
