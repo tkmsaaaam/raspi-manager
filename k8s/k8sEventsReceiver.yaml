@@ -14,6 +14,14 @@ data:
       otlphttp:
         endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
     service:
+      telemetry:
+        metrics:
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0
+                    port: 8888
       pipelines:
         logs:
           receivers: [k8s_events]
@@ -124,6 +132,10 @@ spec:
       serviceAccountName: k8s-events-receiver
       containers:
         - name: k8s-events-receiver
+          ports:
+            - name: metrics
+              containerPort: 8888
+              protocol: TCP
           image: docker.io/otel/opentelemetry-collector-contrib:0.158.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases https://hub.docker.com/r/otel/opentelemetry-collector-contrib
           args: ['--config', '/etc/config/config.yaml']
           volumeMounts:
