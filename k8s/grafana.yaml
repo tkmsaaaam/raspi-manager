@@ -39,7 +39,7 @@ spec:
               memory: 512Mi
           env:
             - name: GF_SERVER_ROOT_URL
-              value: "http://raspberrypi:22223/grafana/"
+              value: "http://raspberrypi.local:22223/grafana/"
             - name: GF_SERVER_SERVE_FROM_SUB_PATH
               value: "false"
             - name: GF_METRICS_ENABLED
