@@ -24,6 +24,7 @@ spec:
         - name: victoriatraces
           image: docker.io/victoriametrics/victoria-traces:v0.10.0 # https://github.com/VictoriaMetrics/victoriaTraces/releases https://hub.docker.com/r/victoriametrics/victoria-traces
           args:
+            - -http.pathPrefix=/victoriatraces
             - -storageDataPath=/storage
             - -retentionPeriod=365d
             - -retention.maxDiskSpaceUsageBytes=1GB
@@ -52,8 +53,11 @@ metadata:
     run: victoriatraces-svc
   namespace: otel
 spec:
+  type: NodePort
   ports:
     - port: 10428
+      targetPort: 10428
+      nodePort: 30003
       protocol: TCP
   selector:
     app: victoriatraces

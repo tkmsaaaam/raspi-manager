@@ -12,9 +12,9 @@ data:
         collection_interval: 10s
     exporters:
       otlphttp/metrics:
-        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/"
+        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/victoriametrics/opentelemetry/"
       otlphttp/logs:
-        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
+        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/victorialogs/insert/opentelemetry/"
     service:
       telemetry:
         metrics:

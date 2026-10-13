@@ -19,7 +19,7 @@ data:
           - /var/log/clamav/freshclam.log
     exporters:
       otlphttp/logs:
-        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/insert/opentelemetry/"
+        endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/victorialogs/insert/opentelemetry/"
     service:
       telemetry:
         metrics:

@@ -57,7 +57,7 @@ data:
         auth_type: serviceAccount
     exporters:
       otlphttp/metrics:
-        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/opentelemetry/"
+        endpoint: "http://victoriametrics-svc.otel.svc.cluster.local:8428/victoriametrics/opentelemetry/"
     service:
       telemetry:
         metrics:

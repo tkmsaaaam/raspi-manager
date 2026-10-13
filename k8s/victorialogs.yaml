@@ -24,6 +24,7 @@ spec:
         - name: victorialogs
           image: docker.io/victoriametrics/victoria-logs:v1.52.0 # https://github.com/VictoriaMetrics/VictoriaLogs/releases https://hub.docker.com/r/victoriametrics/victoria-logs
           args:
+            - -http.pathPrefix=/victorialogs
             - -storageDataPath=/storage
             - -retentionPeriod=365d
             - -retention.maxDiskSpaceUsageBytes=1GB
@@ -52,8 +53,11 @@ metadata:
     run: victorialogs-svc
   namespace: otel
 spec:
+  type: NodePort
   ports:
     - port: 9428
+      targetPort: 9428
+      nodePort: 30002
       protocol: TCP
   selector:
     app: victorialogs

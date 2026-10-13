@@ -48,12 +48,15 @@ data:
         static_configs:
           - targets: ['grafana-svc.otel.svc.cluster.local:3000']
       - job_name: victoriametrics
+        metrics_path: /victoriametrics/metrics
         static_configs:
           - targets: ['127.0.0.1:8428']
       - job_name: victorialogs
+        metrics_path: /victorialogs/metrics
         static_configs:
           - targets: ['victorialogs-svc.otel.svc.cluster.local:9428']
       - job_name: victoriatraces
+        metrics_path: /victoriatraces/metrics
         static_configs:
           - targets: ['victoriatraces-svc.otel.svc.cluster.local:10428']
       - job_name: otel-collector
@@ -152,6 +155,7 @@ spec:
         - name: victoriametrics
           image: docker.io/victoriametrics/victoria-metrics:v1.148.0 # https://github.com/VictoriaMetrics/victoriaMetrics/releases https://hub.docker.com/r/victoriametrics/victoria-metrics
           args:
+            - -http.pathPrefix=/victoriametrics
             - -storageDataPath=/storage
             # VM has no disk-size retention limit; tune this after measuring usage.
             - -retentionPeriod=365d
@@ -187,8 +191,11 @@ metadata:
     run: victoriametrics-svc
   namespace: otel
 spec:
+  type: NodePort
   ports:
     - port: 8428
+      targetPort: 8428
+      nodePort: 30001
       protocol: TCP
   selector:
     app: victoriametrics
