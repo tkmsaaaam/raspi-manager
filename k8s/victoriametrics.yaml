@@ -195,7 +195,7 @@ spec:
   ports:
     - port: 8428
       targetPort: 8428
-      nodePort: 30001
+      nodePort: 30428
       protocol: TCP
   selector:
     app: victoriametrics
