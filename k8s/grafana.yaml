@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: grafana
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: grafana
   namespace: otel
 spec:
@@ -56,6 +57,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: grafana-pvc
   namespace: otel
 spec:
@@ -69,6 +72,8 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: local-storage
   namespace: otel
 provisioner: kubernetes.io/no-provisioner
@@ -77,6 +82,8 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: grafana-pv
   namespace: otel
 spec:
@@ -93,6 +100,7 @@ kind: Service
 metadata:
   name: grafana-svc
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     run: grafana-svc
   namespace: otel
 spec:
@@ -105,6 +113,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: grafana-nodeport
   namespace: otel
 spec:

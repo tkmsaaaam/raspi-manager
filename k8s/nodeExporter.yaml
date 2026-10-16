@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: node-exporter
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: node-exporter
   namespace: otel
 spec:
@@ -36,6 +37,7 @@ kind: Service
 metadata:
   name: node-exporter-svc
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     run: node-exporter-svc
   namespace: otel
 spec:

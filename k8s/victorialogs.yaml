@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: victorialogs
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: victorialogs
   namespace: otel
 spec:
@@ -50,6 +51,7 @@ kind: Service
 metadata:
   name: victorialogs-svc
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     run: victorialogs-svc
   namespace: otel
 spec:
@@ -66,6 +68,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: victorialogs-pv
 spec:
   capacity:
@@ -90,6 +94,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: victorialogs-pvc
   namespace: otel
 spec:

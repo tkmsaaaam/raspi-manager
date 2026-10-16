@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: docker-registry
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: docker-registry
 spec:
   replicas: 1

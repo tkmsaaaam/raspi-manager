@@ -4,6 +4,7 @@ kind: ConfigMap
 metadata:
   name: k8s-cluster-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-cluster-receiver
 data:
   config.yaml: |
@@ -36,6 +37,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-cluster-receiver
   name: k8s-cluster-receiver
 ---
@@ -44,6 +46,7 @@ kind: ClusterRole
 metadata:
   name: k8s-cluster-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-cluster-receiver
 rules:
   - apiGroups:
@@ -118,6 +121,7 @@ kind: ClusterRoleBinding
 metadata:
   name: k8s-cluster-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-cluster-receiver
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -133,6 +137,7 @@ kind: Deployment
 metadata:
   name: k8s-cluster-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-cluster-receiver
 spec:
   replicas: 1
@@ -174,6 +179,7 @@ kind: Service
 metadata:
   name: k8s-cluster-receiver-svc
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     run: k8s-cluster-receiver-svc
 spec:
   ports:

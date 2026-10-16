@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: otel-endpoints
   namespace: tasks
 data:

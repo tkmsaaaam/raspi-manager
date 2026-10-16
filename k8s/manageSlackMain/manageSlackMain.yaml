@@ -1,6 +1,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
   name: manage-slack-main
   namespace: tasks
 spec:

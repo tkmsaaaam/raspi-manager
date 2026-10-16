@@ -4,6 +4,7 @@ kind: ConfigMap
 metadata:
   name: k8s-events-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-events-receiver
 data:
   config.yaml: |
@@ -31,6 +32,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-events-receiver
   name: k8s-events-receiver
 ---
@@ -39,6 +41,7 @@ kind: ClusterRole
 metadata:
   name: k8s-events-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-events-receiver
 rules:
   - apiGroups:
@@ -103,6 +106,7 @@ kind: ClusterRoleBinding
 metadata:
   name: k8s-events-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-events-receiver
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -118,6 +122,7 @@ kind: Deployment
 metadata:
   name: k8s-events-receiver
   labels:
+    app.kubernetes.io/part-of: raspi-manager
     app: k8s-events-receiver
 spec:
   replicas: 1
