@@ -18,6 +18,16 @@ data:
           - /var/log/clamav/clamav.log
           - /var/log/clamav/daily-scan.log
           - /var/log/clamav/freshclam.log
+        # Read existing scan results even when the file has not changed since startup.
+        # Offsets are in memory, so collector restarts will re-read these files.
+        start_at: beginning
+        include_file_path: true
+      filelog/auth:
+        include:
+          - /var/log/auth.log
+        # Read existing authentication logs; restarts will re-read the file.
+        start_at: beginning
+        include_file_path: true
     exporters:
       otlphttp/logs:
         endpoint: "http://victorialogs-svc.otel.svc.cluster.local:9428/victorialogs/insert/opentelemetry/"
@@ -32,7 +42,7 @@ data:
                     port: 8888
       pipelines:
         logs:
-          receivers: [filelog/container, filelog/clamav]
+          receivers: [filelog/container, filelog/clamav, filelog/auth]
           exporters: [otlphttp/logs]
 ---
 apiVersion: apps/v1
@@ -55,6 +65,7 @@ spec:
       containers:
         - name: otel-collector
           securityContext:
+            # Host logs include root:root and clamav-owned files with mode 0640.
             runAsUser: 0
           ports:
             - name: metrics
@@ -66,6 +77,7 @@ spec:
           volumeMounts:
             - name: logs
               mountPath: /var/log
+              readOnly: true
             - name: config
               mountPath: /etc/config
           resources:
