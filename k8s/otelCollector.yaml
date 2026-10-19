@@ -11,6 +11,7 @@ data:
       filelog/container:
         include:
           - /var/log/containers/*.log
+        include_file_path: true
         operators:
           - type: container
       filelog/clamav:
