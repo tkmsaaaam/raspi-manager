@@ -10,7 +10,8 @@ data:
     receivers:
       filelog/container:
         include:
-          - /var/log/containers/*.log
+          # The container parser extracts Kubernetes metadata from the Pod log path.
+          - /var/log/pods/*/*/*.log
         include_file_path: true
         operators:
           - type: container
