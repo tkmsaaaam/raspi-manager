@@ -84,10 +84,10 @@ spec:
               mountPath: /etc/config
           resources:
             requests:
-              cpu: 25m
+              cpu: 100m
               memory: 64Mi
             limits:
-              cpu: 100m
+              cpu: 500m
               memory: 512Mi
       volumes:
         - name: logs
