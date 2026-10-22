@@ -1,0 +1,20 @@
+# Restore the Metrics API registration for the existing metrics-server Service.
+# Based on metrics-server v0.8.1 manifests/base/apiservice.yaml:
+# https://github.com/kubernetes-sigs/metrics-server/blob/v0.8.1/manifests/base/apiservice.yaml
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.metrics.k8s.io
+  labels:
+    app.kubernetes.io/part-of: raspi-manager
+spec:
+  service:
+    name: metrics-server
+    namespace: kube-system
+  group: metrics.k8s.io
+  version: v1beta1
+  # Official default for the API server -> metrics-server connection.
+  # This does not change metrics-server -> kubelet certificate validation.
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100
